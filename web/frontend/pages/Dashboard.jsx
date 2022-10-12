@@ -1,11 +1,14 @@
 import { Card, Page, Layout, TextContainer, Heading } from "@shopify/polaris";
 import { TitleBar } from "@shopify/app-bridge-react";
 
-export default function PageName() {
+
+import {UpsellProductSection} from "../components/UpsellproductSection.jsx"
+
+export default function Dashboard() {
   return (
     <Page>
       <TitleBar
-        title="Page name"
+        title="Dashboard"
         primaryAction={{
           content: "Primary action",
           onAction: () => console.log("Primary action"),
@@ -17,7 +20,10 @@ export default function PageName() {
           },
         ]}
       />
-      <Layout>
+
+      <UpsellProductSection/>
+
+      {/* <Layout>
         <Layout.Section>
           <Card sectioned>
             <Heading>Heading</Heading>
@@ -40,7 +46,7 @@ export default function PageName() {
             </TextContainer>
           </Card>
         </Layout.Section>
-      </Layout>
+      </Layout> */}
     </Page>
   );
 }

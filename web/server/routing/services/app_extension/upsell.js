@@ -1,79 +1,68 @@
-// const express = require("express");
-// const cors = require("cors");
-// const jwt = require("jsonwebtoken");
-// const { v4: uuidv4 } = require("uuid");
-// const fetch = require("node-fetch");
-// const { GraphQLClient, gql } = require("graphql-request");
+import express from "express";
+import cors from "cors";
+import jwt from "jsonwebtoken";
+import { v4 as uuidv4 } from "uuid";
+import fetch from "node-fetch";
+import { GraphQLClient, gql } from "graphql-request";
 
 import { Shopify } from "@shopify/shopify-api";
 import db from "../../../db/models/postgres/index.js";
+import { getProduct } from "../../../shopify/rest_api/product.js";
 import "colors";
+// const { uuidv4 } = uuid
 
 export const offer = async (req, res) => {
+  console.log(req.query,"======== offer".yellow); 
 
-console.log("======== offer");
+  const session = await Shopify.Utils.loadOfflineSession("saad-testing-checkout.myshopify.com");
+  // const session = await Shopify.Utils.loadCurrentSession(req, res, false);
 
-    const session = await Shopify.Utils.loadCurrentSession(req, res, false);
-    
+  let result = await getProduct(session, "6998702981173");
+  delete result.session;
+  console.log("======== offer".yellow);
+  // const result = await graphQLClient.request(query, {
+  //   productId: `gid://shopify/Product/${process.env.PRODUCT_ID}`,
+  // });
 
-    console.log(session, "======== offer");
-      res.status(200).send({
-        Responce: {
-          result: "SUCCESS",
-          data: session,
-        },
-      });
-//   const result = await graphQLClient.request(query, {
-//     productId: `gid://shopify/Product/${process.env.PRODUCT_ID}`,
-//   });
+  // const product = result.product;
+  // const variant = result.product.variants.edges[0].node;
 
-//   const product = result.product;
-//   const variant = result.product.variants.edges[0].node;
+  const initialData = {
+    variantId: result.variants[0].id,
+    productTitle: result.title,
+    productImageURL: result.image.src,
+    productDescription: "product.descriptionHtml.split(/<br.*?>/)",
+    originalPrice: result.variants[0].compare_at_price,
+    discountedPrice: result.variants[0].price,
+  };
 
-//   const initialData = {
-//     variantId: variant.id.split("gid://shopify/ProductVariant/")[1],
-//     productTitle: product.title,
-//     productImageURL: product.featuredImage.url,
-//     productDescription: product.descriptionHtml.split(/<br.*?>/),
-//     originalPrice: variant.compareAtPrice,
-//     discountedPrice: variant.price,
-//   };
+  console.log(initialData, "====>Data For show".bgRed);
 
-//   res.send(initialData);
+  res.send(initialData);
+
 };
 
 export const signChangeset = async (req, res) => {
-    console.log("======== signChangeset");
-    const session = await Shopify.Utils.loadCurrentSession(req, res, false);
-    
-    console.log(session, "======== signChangeset");
 
-  res.status(200).send({
-    Responce: {
-      result: "SUCCESS",
-      data: session,
-    },
-  });
+    const decodedToken = jwt.verify(
+      req.body.token,
+      process.env.SHOPIFY_API_SECRET
+    );
+    const decodedReferenceId =
+      decodedToken.input_data.initialPurchase.referenceId;
 
-    //   const decodedToken = jwt.verify(
-//     req.body.token,
-//     process.env.SHOPIFY_API_SECRET
-//   );
-//   const decodedReferenceId =
-//     decodedToken.input_data.initialPurchase.referenceId;
+    if (decodedReferenceId !== req.body.referenceId) {
+      res.status(400).render();
+    }
 
-//   if (decodedReferenceId !== req.body.referenceId) {
-//     res.status(400).render();
-//   }
+    const payload = {
+      iss: process.env.SHOPIFY_API_KEY,
+      jti: uuidv4(),
+      iat: Date.now(),
+      sub: req.body.referenceId,
+      changes: req.body.changes,
+    };
 
-//   const payload = {
-//     iss: process.env.SHOPIFY_API_KEY,
-//     jti: uuidv4(),
-//     iat: Date.now(),
-//     sub: req.body.referenceId,
-//     changes: req.body.changes,
-//   };
-
-//   const token = jwt.sign(payload, process.env.SHOPIFY_API_SECRET);
-//   res.json({ token });
+    const token = jwt.sign(payload, process.env.SHOPIFY_API_SECRET);
+    res.json({ token });
 };

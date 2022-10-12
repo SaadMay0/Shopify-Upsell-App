@@ -83,14 +83,15 @@ export async function createServer(
   billingSettings = BILLING_SETTINGS
 ) {
   const app = express();
-
+  
   app.set("use-online-tokens", USE_ONLINE_TOKENS);
   app.use(cookieParser(Shopify.Context.API_SECRET_KEY));
-
+  
+  
   applyAuthMiddleware(app, {
     billing: billingSettings,
   });
-
+  
   // Do not call app.use(express.json()) before processing webhooks with
   // Shopify.Webhooks.Registry.process().
   // See https://github.com/Shopify/shopify-api-node/blob/main/docs/usage/webhooks.md#note-regarding-use-of-body-parsers
@@ -104,13 +105,12 @@ export async function createServer(
       if (!res.headersSent) {
         res.status(500).send(e.message);
       }
-    }
+    } 
   });
-
+  
   // All endpoints after this point will require an active session
- 
-   
-  // app.use(express.json({ limit: "50mb" }));
+  
+  app.use(express.json({ limit: "50mb" }));
   // app.use(express.urlencoded({ extended: false }));
   mountRoutes(app);
 
@@ -127,7 +127,7 @@ export async function createServer(
       res,
       app.get("use-online-tokens")
     );
-    const { Product } = await import(
+    const { Product } = await import( 
       `@shopify/shopify-api/dist/rest-resources/${Shopify.Context.API_VERSION}/index.js`
     );
 

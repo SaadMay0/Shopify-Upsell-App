@@ -8,36 +8,41 @@ module.exports = {
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
 
-    await queryInterface.createTable("Cities", {
-      id: {
-        type: Sequelize.UUID,
-        primaryKey: true,
-        allowNull: false,
-        autoIncrement: false,
-        defaultValue: Sequelize.UUIDV4,
-      },
-      storeId: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        onDelete: "CASCADE",
-        references: {
-          model: "store",
-          key: "id",
-          as: "storeId",
+      await queryInterface.createTable("UpsellProducts", {
+        id: {
+          type: Sequelize.UUID,
+          primaryKey: true,
+          allowNull: false,
+          autoIncrement: false,
+          defaultValue: Sequelize.UUIDV4,
         },
-      },
-      // columName: {
-      //   type: Sequelize.STRING,
-      // },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-    });
+        storeId: {
+          type: Sequelize.STRING,
+          allowNull: false,
+          onDelete: "CASCADE",
+          references: {
+            model: "store",
+            key: "id",
+            as: "storeId",
+          },
+        },
+        upsellProducts: {
+          allowNull: false,
+          type: Sequelize.TEXT,
+        },
+        upsellProductsInfo: {
+          allowNull: false,
+          type: Sequelize.TEXT,
+        },
+        createdAt: {
+          allowNull: false,
+          type: Sequelize.DATE,
+        },
+        updatedAt: {
+          allowNull: false,
+          type: Sequelize.DATE,
+        },
+      });
   },
   async down(queryInterface, Sequelize) {
     /**
@@ -50,7 +55,7 @@ module.exports = {
      */
 
     // await queryInterface.dropAllTables();
-    await queryInterface.dropTable("Cities");
+    await queryInterface.dropTable("UpsellProducts");
 
   },
 };
