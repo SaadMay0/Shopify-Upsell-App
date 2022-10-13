@@ -40,7 +40,7 @@ extend(
   async ({ storage, inputData }) => {
    let shop = inputData.shop.domain;
     const postPurchaseOffer = await fetch(
-      `https://6269-110-39-147-226.ngrok.io/api/offer?shop=${shop}`
+      `https://shopify-app-upsell.herokuapp.com/api/offer?shop=${shop}`
     ).then((res) => {
       // console.log(res, "------postPurchaseOffer------");
       return res.json();
@@ -105,7 +105,7 @@ export function App() {
 
     // Make a request to your app server to sign the changeset
     const token = await fetch(
-      "https://6269-110-39-147-226.ngrok.io/api/sign-changeset",
+      "https://shopify-app-upsell.herokuapp.com/api/sign-changeset",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
