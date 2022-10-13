@@ -1,13 +1,13 @@
-import express from "express";
-import cors from "cors";
+// import express from "express";
+// import cors from "cors";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
-import fetch from "node-fetch";
-import { GraphQLClient, gql } from "graphql-request";
+// import fetch from "node-fetch";
+// import { GraphQLClient, gql } from "graphql-request";
 
 import { Shopify } from "@shopify/shopify-api";
 import db from "../../../db/models/postgres/index.js";
-import { getProduct } from "../../../shopify/rest_api/product.js";
+// import { getProduct } from "../../../shopify/rest_api/product.js";
 import "colors";
 // const { uuidv4 } = uuid
 
