@@ -15,6 +15,7 @@ import {
   Spinner,
   TextField,
   Select,
+  PageActions,
 } from "@shopify/polaris";
 import { ImageMajor } from "@shopify/polaris-icons";
 import { ResourcePicker } from "@shopify/app-bridge-react";
@@ -219,7 +220,7 @@ export function UpsellProductSection() {
           showVariants={true}
           open={ResourcePickerState}
           initialSelectionIds={selectedProducts}
-          selectMultiple= {3}
+          selectMultiple={3}
           onCancel={() => {
             setResourceState(false);
           }}
@@ -231,7 +232,7 @@ export function UpsellProductSection() {
             allProducts.map((ele) => {
               Object.assign(ele, {
                 upsellQuantity: 1,
-                upsellPriority: "height",
+                upsellPriority: "High",
               });
               // let obj = {
               //   img: product.image.src,
@@ -315,6 +316,19 @@ export function UpsellProductSection() {
             </Card>
           </Layout.Section>
         </Layout>
+        <PageActions
+          primaryAction={{
+            content: "Save",
+            onAction:()=>{postUpsellProducts(selectedProducts);}
+
+          }}
+          // secondaryActions={[
+          //   {
+          //     content: "Delete",
+          //     destructive: true,
+          //   },
+          // ]}
+        />
         {active ? ren : null}
       </Page>
     </>

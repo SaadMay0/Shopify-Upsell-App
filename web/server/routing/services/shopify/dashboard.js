@@ -68,7 +68,7 @@ export const postSelectUpSellProducts = async (req, res) => {
         } else {
           let product = await getProduct(session, ele.id.split("/").pop());
           delete product.session;
-          console.log(product,"Cheeck Inventery".red);
+          // console.log(product,"Cheeck Inventery".red);
           let obj = {
             id: ele.id.split("/").pop(),
             img: product.image.src,
@@ -77,9 +77,10 @@ export const postSelectUpSellProducts = async (req, res) => {
             upsellQuantity: ele.upsellQuantity,
             upsellPriority: ele.upsellPriority,
             invantryQuantity: product.variants[0].inventory_quantity,
-            // originalPrice: result.variants[0].compare_at_price,
-            // discountedPrice: result.variants[0].price,
-            variantId: result.variants[0].id,
+            originalPrice: product.variants[0].compare_at_price,
+            discountedPrice: product.variants[0].price,
+            productDescription: product.body_html.split(/<br.*?>/),
+            variantId: product.variants[0].id,
           };
           arr.push(obj);
         }

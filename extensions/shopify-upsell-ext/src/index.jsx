@@ -27,7 +27,6 @@ import {
   Layout,
 } from "@shopify/post-purchase-ui-extensions-react";
 
-
 /**
  * Entry point for the `ShouldRender` Extension Point.
  *
@@ -36,22 +35,25 @@ import {
  * extension point.
  */
 
-extend("Checkout::PostPurchase::ShouldRender", async ({ storage }) => {
-  const postPurchaseOffer = await fetch(
-    "https://4486-110-39-147-226.ngrok.io/api/offer"
-  ).then((res) => {
-    // console.log(res, "------postPurchaseOffer------");
-    return res.json();
-  });
-  
+extend(
+  "Checkout::PostPurchase::ShouldRender",
+  async ({ storage, inputData }) => {
+   let shop = inputData.shop.domain;
+    const postPurchaseOffer = await fetch(
+      `https://6269-110-39-147-226.ngrok.io/api/offer?shop=${shop}`
+    ).then((res) => {
+      // console.log(res, "------postPurchaseOffer------");
+      return res.json();
+    });
 
-  await storage.update(postPurchaseOffer);
+    console.log(storage,"env File cheeck");
 
+    await storage.update(postPurchaseOffer);
 
+    return { render: true };
+  }
+);
 
-  return { render: true };
-});
- 
 /**
  * Entry point for the `Render` Extension Point
  *
@@ -62,13 +64,10 @@ extend("Checkout::PostPurchase::ShouldRender", async ({ storage }) => {
 render("Checkout::PostPurchase::Render", () => <App />);
 
 export function App() {
-  const { storage, inputData, calculateChangeset, applyChangeset, done } =
+  const { storage, inputData, calculateChangeset, applyChangeset, done, shop } =
     useExtensionInput();
   const [loading, setLoading] = useState(true);
   const [calculatedPurchase, setCalculatedPurchase] = useState();
-    
-
-
 
   useEffect(() => {
     async function calculatePurchase() {
@@ -77,7 +76,7 @@ export function App() {
 
       setCalculatedPurchase(result.calculatedPurchase);
       setLoading(false);
-      console.log(result,"=======UseEffect Result======");
+      console.log(result, "=======UseEffect Result======");
     }
 
     calculatePurchase();
@@ -86,11 +85,7 @@ export function App() {
   const { variantId, productTitle, productImageURL, productDescription } =
     storage.initialData;
 
-    const changes = [
-      { type: "add_variant", variantId, quantity: 1 },
-    ];
-  
-
+  const changes = [{ type: "add_variant", variantId, quantity: 1 }];
 
   // Extract values from the calculated purchase
   const shipping =
@@ -110,7 +105,7 @@ export function App() {
 
     // Make a request to your app server to sign the changeset
     const token = await fetch(
-      "https://4486-110-39-147-226.ngrok.io/api/sign-changeset",
+      "https://6269-110-39-147-226.ngrok.io/api/sign-changeset",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -124,14 +119,14 @@ export function App() {
       .then((response) => response.json())
       .then((response) => {
         // console.log(response,"Post Method For Aplly Change set");
-        return response.token
+        return response.token;
       });
 
     // Make a request to Shopify servers to apply the changeset
     await applyChangeset(token);
 
     // console.log(token, "------applyChangeset11111-------", inputData.token);
-    
+
     // Redirect to the thank-you page
     done();
   }

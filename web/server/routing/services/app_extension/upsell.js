@@ -12,31 +12,64 @@ import "colors";
 // const { uuidv4 } = uuid
 
 export const offer = async (req, res) => {
-  console.log(req,"======== offer".yellow); 
+  console.log(req.query.shop,"======== offer rout is Working".yellow); 
+  let shop = req.query.shop;
+  const session = await Shopify.Utils.loadOfflineSession(shop);
+    const upsellProducts = await db.UpsellProducts.findOne({
+      where: { storeId: session.id },
+    });
+  
+  let randomNbr = Math.floor(Math.random() * 3);
 
-  const session = await Shopify.Utils.loadOfflineSession("saad-testing-checkout.myshopify.com");
-  // const session = await Shopify.Utils.loadCurrentSession(req, res, false);
 
-  let result = await getProduct(session, "6998702981173");
-  delete result.session;
-  console.log("======== offer".yellow);
-  // const result = await graphQLClient.request(query, {
-  //   productId: `gid://shopify/Product/${process.env.PRODUCT_ID}`,
-  // });
+  console.log(randomNbr,"===Befor Prioity".yellow);
 
-  // const product = result.product;
-  // const variant = result.product.variants.edges[0].node;
+// let randomNbr = Math.floor(Math.random() * 100);
+//   if (randomNbr<=50) {
+//     const result = upsellProducts.upsellProductsInfo.filter(
+//       (ele, index) => {
+//         if (ele.upsellPriority == "High") {
+//           randomNbr = index;
+
+//         }
+//         console.log(ele, index,randomNbr,"if condition is Working".bgYellow)
+//       }
+//     );
+//   } else if (randomNbr > 50 && randomNbr <= 80) {
+//     const result = upsellProducts.upsellProductsInfo.filter((ele, index) => {
+//       if (ele.upsellPriority == "Medium") {
+//         randomNbr = index;
+//       }
+//       console.log(ele, index, randomNbr, "else if condition is Working".bgYellow);
+//     });
+//   } else {
+// const result = upsellProducts.upsellProductsInfo.filter((ele, index) => {
+//   if (ele.upsellPriority == "Low") {
+//     randomNbr = index;
+//   }
+//   console.log(ele, index, randomNbr, "else condition is Working".bgYellow);
+// });
+//   }
+
+  // let result = await getProduct(session, "6998702981173");
+  
 
   const initialData = {
-    variantId: result.variants[0].id,
-    productTitle: result.title,
-    productImageURL: result.image.src,
-    productDescription: "product.descriptionHtml.split(/<br.*?>/)",
-    originalPrice: result.variants[0].compare_at_price,
-    discountedPrice: result.variants[0].price,
+    variantId: upsellProducts.upsellProductsInfo[randomNbr].variantId,
+    productTitle: upsellProducts.upsellProductsInfo[randomNbr].productName,
+    productImageURL: upsellProducts.upsellProductsInfo[randomNbr].img,
+    productDescription:
+      upsellProducts.upsellProductsInfo[randomNbr].productDescription,
+    originalPrice: upsellProducts.upsellProductsInfo[randomNbr].originalPrice,
+    discountedPrice:
+      upsellProducts.upsellProductsInfo[randomNbr].discountedPrice,
   };
 
-  console.log(initialData, "====>Data For show".bgRed);
+  console.log(
+    initialData,
+    "====>Data For show".bgRed,
+    upsellProducts.upsellProductsInfo,
+  );
 
   res.send(initialData);
 
