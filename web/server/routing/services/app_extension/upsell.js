@@ -12,7 +12,7 @@ import "colors";
 // const { uuidv4 } = uuid
 
 export const offer = async (req, res) => {
-  console.log(req.query,"======== offer".yellow); 
+  console.log(req,"======== offer".yellow); 
 
   const session = await Shopify.Utils.loadOfflineSession("saad-testing-checkout.myshopify.com");
   // const session = await Shopify.Utils.loadCurrentSession(req, res, false);

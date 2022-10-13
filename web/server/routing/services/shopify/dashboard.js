@@ -23,7 +23,7 @@ export const getUpsellProducts = async (req, res) => {
 export const postSelectUpSellProducts = async (req, res) => {
   console.log("selectUpSellProducts is working".yellow);
   try {
-    const { upsellProducts } = req.body;
+    const { upsellProducts, upsellProductsInfo } = req.body;
 
     const session = await Shopify.Utils.loadCurrentSession(req, res, false);
     // getProduct;
@@ -31,24 +31,63 @@ export const postSelectUpSellProducts = async (req, res) => {
     console.log(
       "Selected Product length is ",
       upsellProducts.length,
-      "upsellProducts".bgCyan
+      "upsellProducts".bgCyan,
+      // upsellProductsInfo,
     );
     await Promise.all(
       upsellProducts.map(async (ele) => {
-        let product = await getProduct(session, ele.id.split("/").pop());
-        delete product.session;
-        let obj = {
-          img: product.image.src,
-          productName: product.title,
-          selectedVariants: `${ele.variants.length} of ${product.variants.length}`,
-          upsellQuantity: ele.upsellQuantity,
-          upsellPriority: ele.upsellPriority,
-        };
-          
-        arr.push(obj);
+
+        const result = upsellProductsInfo.filter(
+           (items) =>  {return items.id == ele.id.split("/").pop()}
+
+          // {
+
+          // if (items.id == ele.id.split("/").pop()) {
+
+          //   console.log(items,"items from backend".bgCyan);
+
+          //     //  let obj = {
+          //     //    id: ele.idid.split("/").pop(),
+          //     //    img: product.image.src,
+          //     //    productName: product.title,
+          //     //    selectedVariants: `${ele.variants.length} of ${product.variants.length}`,
+          //     //    upsellQuantity: ele.upsellQuantity,
+          //     //    upsellPriority: ele.upsellPriority,
+          //     //  };
+          //     //  arr.push(obj);
+          //   arr.push(items);
+
+          // } else {
+          // }
+
+          // }
+        );
+        if (result.length==1) {
+           console.log(result, "Result from if condition ".yellow);
+          arr.push(...result);
+        } else {
+          let product = await getProduct(session, ele.id.split("/").pop());
+          delete product.session;
+          console.log(product,"Cheeck Inventery".red);
+          let obj = {
+            id: ele.id.split("/").pop(),
+            img: product.image.src,
+            productName: product.title,
+            selectedVariants: `${ele.variants.length} of ${product.variants.length}`,
+            upsellQuantity: ele.upsellQuantity,
+            upsellPriority: ele.upsellPriority,
+            invantryQuantity: product.variants[0].inventory_quantity,
+            // originalPrice: result.variants[0].compare_at_price,
+            // discountedPrice: result.variants[0].price,
+            variantId: result.variants[0].id,
+          };
+          arr.push(obj);
+        }
+
+        console.log(result,"Result from ".yellow);
       })
     );
-
+ 
     const [row, created] = await db.UpsellProducts.findOrCreate({
       where: { storeId: session.id },
       defaults: {

@@ -14,6 +14,7 @@ import {
   Pagination,
   Spinner,
   TextField,
+  Select,
 } from "@shopify/polaris";
 import { ImageMajor } from "@shopify/polaris-icons";
 import { ResourcePicker } from "@shopify/app-bridge-react";
@@ -43,6 +44,16 @@ export function UpsellProductSection() {
         setUpsellProductsInfo([...upsellProductsInfo]);
 
     }
+  
+  const handleUpsellPriorityChange = (arrayIndex) => (ele) => {
+    console.log(ele, "handleUpsellPriorityChange");
+    upsellProductsInfo[arrayIndex].upsellPriority = ele;
+
+    setUpsellProductsInfo([...upsellProductsInfo]);
+  };
+  
+  
+  //useCallback((value) => setSortValue(value), []);
     // console.log(upsellProductsInfo,"After Handle");
 
 
@@ -114,6 +125,7 @@ export function UpsellProductSection() {
   async function postUpsellProducts(ele) {
     let obj1 = {
       upsellProducts: ele,
+      upsellProductsInfo: upsellProductsInfo,
     };
 
     console.log(obj1, "postUpsellProducts");
@@ -142,6 +154,12 @@ export function UpsellProductSection() {
     }
   }
 
+    const sortOptions = [
+      { value: "High", label: "High" },
+      { value: "Medium", label: "Medium" },
+      { value: "Low", label: "Low" },
+    ];
+
   const rowMarkup = upsellProductsInfo.map((productele, index) => {
     return (
       <IndexTable.Row id={productele.id} key={productele.id} position={index}>
@@ -158,21 +176,23 @@ export function UpsellProductSection() {
           </Stack>
         </IndexTable.Cell>
         <IndexTable.Cell>
-          {/* {productele.upsellQuantity} */}
           <TextField
             type="number"
             value={productele.upsellQuantity}
             onChange={handleUpsellProductsQuantityChange(index)}
           />
         </IndexTable.Cell>
-        <IndexTable.Cell>{productele.upsellPriority}</IndexTable.Cell>
-        {/* <IndexTable.Cell>Yes</IndexTable.Cell> */}
-
-        {/* <IndexTable.Cell>
-          <Button primary onClick={handleBundleProductsDelete(index)}>
-            Deleted
-          </Button>
-        </IndexTable.Cell> */}
+        {/* <IndexTable.Cell>{productele.invantryQuantity}</IndexTable.Cell> */}
+        <IndexTable.Cell>
+          <Select
+            labelInline
+            label="Priority"
+            options={sortOptions}
+            value={productele.upsellPriority}
+            onChange={handleUpsellPriorityChange(index)}
+          />
+        </IndexTable.Cell>
+     
       </IndexTable.Row>
     );
   });
@@ -199,6 +219,7 @@ export function UpsellProductSection() {
           showVariants={true}
           open={ResourcePickerState}
           initialSelectionIds={selectedProducts}
+          selectMultiple= {3}
           onCancel={() => {
             setResourceState(false);
           }}
