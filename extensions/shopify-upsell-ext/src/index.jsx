@@ -148,9 +148,9 @@ export function App() {
           </TextContainer>
           <TextContainer>
             <Text size="medium">Add the {productTitle} to your order and </Text>
-            <Text size="medium" emphasized>
+            {/* <Text size="medium" emphasized>
               save 15%.
-            </Text>
+            </Text> */}
           </TextContainer>
         </BlockStack>
       </CalloutBanner>
