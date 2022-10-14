@@ -105,17 +105,17 @@ export function UpsellProductSection() {
             if (data.Response.data) {
               setSelectedProducts(data.Response.data.upsellProducts);
               setUpsellProductsInfo(data.Response.data.upsellProductsInfo);
-              setContent("Get All Fragile Products");
+              setContent("Get All Upsell Products");
               setIsError(false);
               setActive(true);
             } else {
-              setContent("Select Fragile Products");
+              setContent("Select Upsell Products");
               setIsError(false);
               setActive(true);
             }
             setIsLoading(false);
 
-          console.log("getProducts get fragile *******************");
+          console.log("getProducts get Upsell *******************");
           return data;
         });
     } catch (error) {
@@ -145,7 +145,7 @@ export function UpsellProductSection() {
           setSelectedProducts(data.Response.data.upsellProducts);
           setUpsellProductsInfo(data.Response.arr);
           setIsLoading(false);
-          setContent(" All Upsell Products Updated");
+          setContent("Upsell Products Updated");
           setIsError(false);
           setActive(true);
           return data;
@@ -226,7 +226,7 @@ export function UpsellProductSection() {
           }}
           onSelection={(ele) => {
             setResourceState(false);
-            // setIsLoading(true);
+            setIsLoading(true);
             //   let arr = [];
             let allProducts = ele.selection;
             allProducts.map((ele) => {
