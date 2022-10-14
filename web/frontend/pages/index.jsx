@@ -22,7 +22,7 @@ export default function HomePage() {
       <TitleBar title="App name" primaryAction={null} />
       <Layout>
         <Layout.Section>
-          <Card sectioned>
+          {/* <Card sectioned> */}
             <MediaCard
               title="Turn your side-project into a business"
               // primaryAction={{
@@ -37,7 +37,7 @@ export default function HomePage() {
                 thumbnailUrl="https://burst.shopifycdn.com/photos/business-woman-smiling-in-office.jpg?width=1850"
               />
             </MediaCard>
-          </Card>
+          {/* </Card> */}
         </Layout.Section>
       </Layout>
     </Page>
