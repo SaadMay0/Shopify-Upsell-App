@@ -26,7 +26,7 @@ import {
   TextBlock,
   Layout,
 } from "@shopify/post-purchase-ui-extensions-react";
-
+import { ImageMajor } from "@shopify/polaris-icons";
 /**
  * Entry point for the `ShouldRender` Extension Point.
  *
@@ -161,7 +161,10 @@ export function App() {
           { viewportSize: "large", sizes: [560, 38, 340] },
         ]}
       >
-        <Image description="product photo" source={productImageURL} />
+        <Image
+          description="product photo"
+          source={productImageURL ?? ImageMajor}
+        />
         <BlockStack />
         <BlockStack>
           <Heading>{productTitle}</Heading>
