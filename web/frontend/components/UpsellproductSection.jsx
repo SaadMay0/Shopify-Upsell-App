@@ -86,7 +86,7 @@ export function UpsellProductSection() {
   };
 
   useEffect(() => {
-    setIsLoading(true);
+    // setIsLoading(true);
     getUpsellProducts();
   }, []);
 
