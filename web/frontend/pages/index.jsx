@@ -20,9 +20,9 @@ export default function HomePage() {
   return (
     <Page narrowWidth>
       <TitleBar title="App name" primaryAction={null} />
-      <Layout>
-        <Layout.Section>
-          {/* <Card sectioned> */}
+      {/* <Layout> */}
+        {/* <Layout.Section> */}
+          <Card>
             <MediaCard
               title="Turn your side-project into a business"
               // primaryAction={{
@@ -37,9 +37,9 @@ export default function HomePage() {
                 thumbnailUrl="https://burst.shopifycdn.com/photos/business-woman-smiling-in-office.jpg?width=1850"
               />
             </MediaCard>
-          {/* </Card> */}
-        </Layout.Section>
-      </Layout>
+          </Card>
+        {/* </Layout.Section> */}
+      {/* </Layout> */}
     </Page>
   );
 }
