@@ -2,6 +2,7 @@
 import { join } from "path";
 import { readFileSync } from "fs";
 import express from "express";
+import cors from "cors";
 import cookieParser from "cookie-parser";
 import { Shopify, LATEST_API_VERSION } from "@shopify/shopify-api";
 
@@ -109,7 +110,7 @@ export async function createServer(
   });
   
   // All endpoints after this point will require an active session
-  
+  app.use(cors());
   app.use(express.json({ limit: "50mb" }));
   // app.use(express.urlencoded({ extended: false }));
   mountRoutes(app);

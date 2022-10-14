@@ -68,7 +68,7 @@ export const offer = async (req, res) => {
   console.log(
     initialData,
     "====>Data For show".bgRed,
-    upsellProducts.upsellProductsInfo,
+    // upsellProducts.upsellProductsInfo,
   );
 
   res.send(initialData);
