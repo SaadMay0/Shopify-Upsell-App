@@ -69,9 +69,10 @@ export const postSelectUpSellProducts = async (req, res) => {
           let product = await getProduct(session, ele.id.split("/").pop());
           delete product.session;
           // console.log(product,"Cheeck Inventery".red);
+          let productImag = product.image?product.image.src:null;
           let obj = {
             id: ele.id.split("/").pop(),
-            img: product.image.src,
+            img: productImag,
             productName: product.title,
             selectedVariants: `${ele.variants.length} of ${product.variants.length}`,
             upsellQuantity: ele.upsellQuantity,

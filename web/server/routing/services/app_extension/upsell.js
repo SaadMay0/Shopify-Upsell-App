@@ -19,10 +19,13 @@ export const offer = async (req, res) => {
       where: { storeId: session.id },
     });
   
-  let randomNbr = Math.floor(Math.random() * 3);
+  
+  let nbr = upsellProducts.upsellProductsInfo;
+  
+  let randomNbr = Math.floor(Math.random() * nbr.length);
 
 
-  console.log(randomNbr,"===Befor Prioity".yellow);
+  console.log(randomNbr, "===Befor Prioity".yellow, nbr.length);
 
 // let randomNbr = Math.floor(Math.random() * 100);
 //   if (randomNbr<=50) {
