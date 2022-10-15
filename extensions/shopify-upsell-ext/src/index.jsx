@@ -26,7 +26,7 @@ import {
   TextBlock,
   Layout,
 } from "@shopify/post-purchase-ui-extensions-react";
-import { ImageMajor } from "@shopify/polaris-icons";
+// import { ImageMajor } from "@shopify/polaris-icons";
 /**
  * Entry point for the `ShouldRender` Extension Point.
  *
@@ -142,17 +142,15 @@ export function App() {
       <CalloutBanner>
         <BlockStack spacing="tight">
           <TextContainer>
+            <Text size="medium">
+              Frequently Bought Together. Order now and get&nbsp;
+            </Text>
             <Text size="medium" emphasized>
-              It&#39;s not too late to add this to your order
+              Free Shipping.
             </Text>
           </TextContainer>
           <TextContainer>
-            <Text size="medium">
-              Add the {productTitle} to your order and get
-            </Text>
-            {/* <Text size="medium" emphasized>
-              Free Shipping
-            </Text> */}
+            <Text size="medium">Add the {productTitle} to your order</Text>
           </TextContainer>
         </BlockStack>
       </CalloutBanner>
@@ -163,10 +161,7 @@ export function App() {
           { viewportSize: "large", sizes: [560, 38, 340] },
         ]}
       >
-        <Image
-          description="product photo"
-          source={productImageURL ?? ImageMajor}
-        />
+        <Image description="product photo" source={productImageURL} />
         <BlockStack />
         <BlockStack>
           <Heading>{productTitle}</Heading>
@@ -202,7 +197,7 @@ export function App() {
           </BlockStack>
           <BlockStack>
             <Button onPress={acceptOffer} submit loading={loading}>
-              Pay now · {formatCurrency(total)}
+              Buy Now . {formatCurrency(total)}
             </Button>
             <Button onPress={declineOffer} subdued loading={loading}>
               Decline this offer
