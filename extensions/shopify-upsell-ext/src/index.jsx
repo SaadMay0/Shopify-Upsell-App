@@ -26,7 +26,7 @@ import {
   TextBlock,
   Layout,
 } from "@shopify/post-purchase-ui-extensions-react";
-import { ImageMajor } from "@shopify/polaris-icons";
+// import { ImageMajor } from "@shopify/polaris-icons";
 /**
  * Entry point for the `ShouldRender` Extension Point.
  *
@@ -38,7 +38,7 @@ import { ImageMajor } from "@shopify/polaris-icons";
 extend(
   "Checkout::PostPurchase::ShouldRender",
   async ({ storage, inputData }) => {
-   let shop = inputData.shop.domain;
+    let shop = inputData.shop.domain;
     const postPurchaseOffer = await fetch(
       `https://shopify-app-upsell.herokuapp.com/api/offer?shop=${shop}`
     ).then((res) => {
@@ -46,7 +46,7 @@ extend(
       return res.json();
     });
 
-    console.log(storage,"env File cheeck");
+    console.log(storage, "env File cheeck");
 
     await storage.update(postPurchaseOffer);
 
@@ -142,15 +142,15 @@ export function App() {
       <CalloutBanner>
         <BlockStack spacing="tight">
           <TextContainer>
+            <Text size="medium">
+              Frequently Bought Together. Order now and get&nbsp;
+            </Text>
             <Text size="medium" emphasized>
-              It&#39;s not too late to add this to your order
+              Free Shipping.
             </Text>
           </TextContainer>
           <TextContainer>
-            <Text size="medium">Add the {productTitle} to your order and </Text>
-            {/* <Text size="medium" emphasized>
-              save 15%.
-            </Text> */}
+            <Text size="medium">Add the {productTitle} to your order</Text>
           </TextContainer>
         </BlockStack>
       </CalloutBanner>
@@ -161,10 +161,7 @@ export function App() {
           { viewportSize: "large", sizes: [560, 38, 340] },
         ]}
       >
-        <Image
-          description="product photo"
-          source={productImageURL ?? ImageMajor}
-        />
+        <Image description="product photo" source={productImageURL} />
         <BlockStack />
         <BlockStack>
           <Heading>{productTitle}</Heading>
@@ -200,7 +197,7 @@ export function App() {
           </BlockStack>
           <BlockStack>
             <Button onPress={acceptOffer} submit loading={loading}>
-              Pay now · {formatCurrency(total)}
+              Buy Now . {formatCurrency(total)}
             </Button>
             <Button onPress={declineOffer} subdued loading={loading}>
               Decline this offer
