@@ -38,7 +38,7 @@ import { ImageMajor } from "@shopify/polaris-icons";
 extend(
   "Checkout::PostPurchase::ShouldRender",
   async ({ storage, inputData }) => {
-   let shop = inputData.shop.domain;
+    let shop = inputData.shop.domain;
     const postPurchaseOffer = await fetch(
       `https://shopify-app-upsell.herokuapp.com/api/offer?shop=${shop}`
     ).then((res) => {
@@ -46,7 +46,7 @@ extend(
       return res.json();
     });
 
-    console.log(storage,"env File cheeck");
+    console.log(storage, "env File cheeck");
 
     await storage.update(postPurchaseOffer);
 
@@ -147,9 +147,11 @@ export function App() {
             </Text>
           </TextContainer>
           <TextContainer>
-            <Text size="medium">Add the {productTitle} to your order and </Text>
+            <Text size="medium">
+              Add the {productTitle} to your order and get
+            </Text>
             {/* <Text size="medium" emphasized>
-              save 15%.
+              Free Shipping
             </Text> */}
           </TextContainer>
         </BlockStack>
