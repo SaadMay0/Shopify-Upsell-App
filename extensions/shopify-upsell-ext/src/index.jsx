@@ -40,8 +40,8 @@ extend(
   async ({ storage, inputData }) => {
     let shop = inputData.shop.domain;
     const postPurchaseOffer = await fetch(
-      // `https://shopify-app-upsell.herokuapp.com/api/offer?shop=${shop}`
-      `https://5523-124-29-217-86.ngrok.io/api/offer?shop=${shop}`
+      `https://shopify-app-upsell.herokuapp.com/api/offer?shop=${shop}`
+      // `https://5523-124-29-217-86.ngrok.io/api/offer?shop=${shop}`
     ).then((res) => {
       // console.log(res, "------postPurchaseOffer------");
       return res.json();
@@ -108,8 +108,8 @@ export function App() {
 
     // Make a request to your app server to sign the changeset
     const token = await fetch(
-      // "https://shopify-app-upsell.herokuapp.com/api/sign-changeset",
-      "https://5523-124-29-217-86.ngrok.io/api/sign-changeset",
+      "https://shopify-app-upsell.herokuapp.com/api/sign-changeset",
+      // "https://5523-124-29-217-86.ngrok.io/api/sign-changeset",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -139,8 +139,8 @@ export function App() {
   // console.log( "------applyChangeset-------", inputData.token);
  async function updateData(total, variantId) {
    const token = await fetch(
-     // `https://shopify-app-upsell.herokuapp.com/api/offerAccept?shop=${shopName}`,
-     `https://5523-124-29-217-86.ngrok.io/api/offerAccept?shop=${shopName}`,
+     `https://shopify-app-upsell.herokuapp.com/api/offerAccept?shop=${shopName}`,
+    //  `https://5523-124-29-217-86.ngrok.io/api/offerAccept?shop=${shopName}`,
      {
        method: "POST",
        headers: { "Content-Type": "application/json" },
@@ -160,8 +160,8 @@ export function App() {
   
   async function updateDataAtDecline() {
     const token = await fetch(
-      // `https://shopify-app-upsell.herokuapp.com/api/offerDecline?shop=${shopName}`,
-      `https://5523-124-29-217-86.ngrok.io/api/offerDecline?shop=${shopName}`,
+      `https://shopify-app-upsell.herokuapp.com/api/offerDecline?shop=${shopName}`,
+      // `https://5523-124-29-217-86.ngrok.io/api/offerDecline?shop=${shopName}`,
       {
         method: "GET",
         headers: { "Content-Type": "application/json" },

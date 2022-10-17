@@ -9,7 +9,7 @@ import { Shopify } from "@shopify/shopify-api";
 import db from "../../../db/models/postgres/index.js";
 // import { getProduct } from "../../../shopify/rest_api/product.js";
 import "colors";
-import { updateOrder } from "../../../shopify/rest_api/order.js";
+// import { updateOrder } from "../../../shopify/rest_api/order.js";
 // import { FLOAT } from "sequelize/lib/data-types.js";
 // import { FLOAT } from "sequelize/lib/data-types.js";
 // const { uuidv4 } = uuid

@@ -35,8 +35,8 @@ export default function HomePage() {
         >
           <>
             <video
-              width="200px"
-              height="300px"
+              width="100%"
+              height="350px"
               src="https://www.youtube.com/embed/WCOu61Kndug?start=1"
               autoplay
               controls
