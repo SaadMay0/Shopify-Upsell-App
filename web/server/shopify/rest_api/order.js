@@ -1,5 +1,5 @@
 import { Shopify } from "@shopify/shopify-api";
-import { Order } from "@shopify/shopify-api/dist/rest-resources/2022-07/index.js";
+import { Order } from "@shopify/shopify-api/dist/rest-resources/2022-10/index.js";
 
 // Orders
 
