@@ -1,8 +1,7 @@
 import { Card, Page, Layout, TextContainer, Heading } from "@shopify/polaris";
 import { TitleBar } from "@shopify/app-bridge-react";
 
-
-import {UpsellProductSection} from "../components/UpsellproductSection.jsx"
+import { UpsellProductSection } from "../components/UpsellproductSection.jsx";
 
 export default function Dashboard() {
   return (
@@ -21,7 +20,7 @@ export default function Dashboard() {
         // ]}
       />
 
-      <UpsellProductSection/>
+      <UpsellProductSection />
     </Page>
   );
 }

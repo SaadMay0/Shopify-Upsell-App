@@ -33,10 +33,15 @@ export default function HomePage() {
           description={`In this course, you’ll learn how the Kular family turned their mom’s recipe book into a global business.`}
           // popoverActions={[{ content: "Dismiss", onAction: () => {} }]}
         >
-          <VideoThumbnail
-            videoLength={150}
-            thumbnailUrl="https://www.loom.com/share/617c2860a69e4f5ba3611d152780ae05"
-          />
+          <>
+            <video
+              width="200px"
+              height="300px"
+              src="https://www.youtube.com/embed/WCOu61Kndug?start=1"
+              autoplay
+              controls
+            ></video>
+          </>
         </MediaCard>
       </Card>
       {/* </Layout.Section> */}

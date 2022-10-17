@@ -38,15 +38,16 @@ import {
 extend(
   "Checkout::PostPurchase::ShouldRender",
   async ({ storage, inputData }) => {
-   let shop = inputData.shop.domain;
+    let shop = inputData.shop.domain;
     const postPurchaseOffer = await fetch(
-      `https://shopify-app-upsell.herokuapp.com/api/offer?shop=${shop}`
+      // `https://shopify-app-upsell.herokuapp.com/api/offer?shop=${shop}`
+      `https://5523-124-29-217-86.ngrok.io/api/offer?shop=${shop}`
     ).then((res) => {
       // console.log(res, "------postPurchaseOffer------");
       return res.json();
     });
 
-    console.log(storage,"env File cheeck");
+    console.log(storage, "env File cheeck", inputData);
 
     await storage.update(postPurchaseOffer);
 
@@ -64,11 +65,13 @@ extend(
 render("Checkout::PostPurchase::Render", () => <App />);
 
 export function App() {
+
   const { storage, inputData, calculateChangeset, applyChangeset, done, shop } =
-    useExtensionInput();
+  useExtensionInput();
   const [loading, setLoading] = useState(true);
   const [calculatedPurchase, setCalculatedPurchase] = useState();
-
+  
+  let shopName = inputData.shop.domain;
   useEffect(() => {
     async function calculatePurchase() {
       // Request Shopify to calculate shipping costs and taxes for the upsell
@@ -76,7 +79,7 @@ export function App() {
 
       setCalculatedPurchase(result.calculatedPurchase);
       setLoading(false);
-      console.log(result, "=======UseEffect Result======");
+      console.log(storage, inputData, shop,"=======UseEffect Result======");
     }
 
     calculatePurchase();
@@ -105,7 +108,8 @@ export function App() {
 
     // Make a request to your app server to sign the changeset
     const token = await fetch(
-      "https://shopify-app-upsell.herokuapp.com/api/sign-changeset",
+      // "https://shopify-app-upsell.herokuapp.com/api/sign-changeset",
+      "https://5523-124-29-217-86.ngrok.io/api/sign-changeset",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -121,6 +125,8 @@ export function App() {
         // console.log(response,"Post Method For Aplly Change set");
         return response.token;
       });
+    
+    
 
     // Make a request to Shopify servers to apply the changeset
     await applyChangeset(token);
@@ -131,8 +137,49 @@ export function App() {
     done();
   }
   // console.log( "------applyChangeset-------", inputData.token);
+ async function updateData(total, variantId) {
+   const token = await fetch(
+     // `https://shopify-app-upsell.herokuapp.com/api/offerAccept?shop=${shopName}`,
+     `https://5523-124-29-217-86.ngrok.io/api/offerAccept?shop=${shopName}`,
+     {
+       method: "POST",
+       headers: { "Content-Type": "application/json" },
+       body: JSON.stringify({
+         total,
+         variantId,
+       }),
+     }
+   )
+     .then((response) => response.json())
+     .then((response) => {
+       // console.log(response,"Post Method For Aplly Change set");
+       return response.token;
+     });
+ }
+
+  
+  async function updateDataAtDecline() {
+    const token = await fetch(
+      // `https://shopify-app-upsell.herokuapp.com/api/offerDecline?shop=${shopName}`,
+      `https://5523-124-29-217-86.ngrok.io/api/offerDecline?shop=${shopName}`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        // body: JSON.stringify({
+        //   total,
+        //   variantId,
+        // }),
+      }
+    )
+      .then((response) => response.json())
+      .then((response) => {
+        // console.log(response,"Post Method For Aplly Change set");
+        return response.token;
+      });
+  }
 
   function declineOffer() {
+    updateDataAtDecline();
     setLoading(true);
     done();
   }
@@ -199,7 +246,7 @@ export function App() {
             />
           </BlockStack>
           <BlockStack>
-            <Button onPress={acceptOffer} submit loading={loading}>
+            <Button onPress={() => { acceptOffer(), updateData(total, variantId); }} submit loading={loading}>
               Buy now · {formatCurrency(total)}
             </Button>
             <Button onPress={declineOffer} subdued loading={loading}>

@@ -32,6 +32,7 @@ export const postSelectUpSellProducts = async (req, res) => {
       "Selected Product length is ",
       upsellProducts.length,
       "upsellProducts".bgCyan,
+      session,
       // upsellProductsInfo,
     );
     await Promise.all(

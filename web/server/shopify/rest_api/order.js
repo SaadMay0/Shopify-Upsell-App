@@ -1,7 +1,5 @@
 import { Shopify } from "@shopify/shopify-api";
-import {
-  Order,
-} from "@shopify/shopify-api/dist/rest-resources/2022-07/index.js";
+import { Order } from "@shopify/shopify-api/dist/rest-resources/2022-07/index.js";
 
 // Orders
 
@@ -26,7 +24,24 @@ export const getOrder = async (session,id) => {
       id: id,
     });
   } catch (err) {
-    console.log(` Catch Error of Get All Orders = ${err.name} `, err);
+    console.log(` Catch Error of Get Order = ${err.name} `, err);
+  }
+};
+
+export const updateOrder = async (session, id, tag ) => {
+  try {
+    const order = new Order({ session: session });
+    order.id = id;
+    order.tags =`${tag}`;
+    await order.save({
+      update: true,
+    });
+
+    return await await order.save({
+      update: true,
+    });
+  } catch (err) {
+    console.log(` Catch Error of updateOrder = ${err.name} `, err);
   }
 };
 

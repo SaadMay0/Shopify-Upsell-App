@@ -1,8 +1,6 @@
 import { Shopify } from "@shopify/shopify-api";
-import {
-  Product,
-} from "@shopify/shopify-api/dist/rest-resources/2022-10/index.js";
-
+import { Product } from "@shopify/shopify-api/dist/rest-resources/2022-07/index.js";
+import "colors";
 
 // Product
 
@@ -13,12 +11,13 @@ export const getAllProducts = async (session) => {
       session: session,
     });
   } catch (err) {
-    console.log(` Catch Error of Get All Products = ${err.name}`,err);
+    console.log(` Catch Error of Get All Products = ${err.name}`, err);
   }
 };
 
-export const getProduct = async (session,id) => {
+export const getProduct = async (session, id) => {
   try {
+    console.log("============ getProduct ========= ".yellow);
     return await Product.find({
       session: session,
       id: id,
@@ -27,4 +26,3 @@ export const getProduct = async (session,id) => {
     console.log(` Catch Error of Get Product = ${err.name}`, err);
   }
 };
- 

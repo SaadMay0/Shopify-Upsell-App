@@ -34,6 +34,22 @@ module.exports = {
           allowNull: false,
           type: Sequelize.TEXT,
         },
+        totalOrders: {
+          allowNull: false,
+          type: Sequelize.INTEGER,
+        },
+        totalPevenue: {
+          allowNull: false,
+          type: Sequelize.FLOAT,
+        },
+        acceptOffer: {
+          allowNull: false,
+          type: Sequelize.INTEGER,
+        },
+        declineOffer: {
+          allowNull: false,
+          type: Sequelize.INTEGER,
+        },
         createdAt: {
           allowNull: false,
           type: Sequelize.DATE,

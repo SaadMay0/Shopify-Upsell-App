@@ -1,6 +1,3 @@
-// const { Model } = require("sequelize");
-// module.exports =
-
 "use strict";
 import { Model } from "sequelize";
 export default (sequelize, DataTypes) => {
@@ -11,7 +8,10 @@ export default (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      //    define association here
+      UpsellProducts.belongsTo(models.store, {
+        foreignKey: { name: "storeId", allowNull: true },
+        onDelete: "CASCADE",
+      });
     }
   }
   UpsellProducts.init(
@@ -40,6 +40,26 @@ export default (sequelize, DataTypes) => {
         set: function (val) {
           return this.setDataValue("upsellProductsInfo", JSON.stringify(val));
         },
+      },
+      totalOrders: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
+      totalPevenue: {
+        allowNull: false,
+        type: DataTypes.FLOAT,
+        defaultValue: 0,
+      },
+      acceptOffer: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
+      declineOffer: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
       },
       storeId: {
         type: DataTypes.STRING,

@@ -30,6 +30,7 @@ export function UpsellProductSection() {
   const [ResourcePickerState, setResourceState] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [upsellProductsInfo, setUpsellProductsInfo] = useState([]);
+  const [allUpsellProductsInfo, setAllUpsellProductsInfo] = useState([]);
   const [active, setActive] = useState(false);
   const [content, setContent] = useState("");
   const [isError, setIsError] = useState(false);
@@ -104,6 +105,7 @@ export function UpsellProductSection() {
             if (data.Response.data) {
               setSelectedProducts(data.Response.data.upsellProducts);
               setUpsellProductsInfo(data.Response.data.upsellProductsInfo);
+              setAllUpsellProductsInfo(data.Response.data);
               setContent("Get All Upsell Products");
               setIsError(false);
               setActive(true);
@@ -143,6 +145,7 @@ export function UpsellProductSection() {
           console.log(data.Response, "******************");
           setSelectedProducts(data.Response.data.upsellProducts);
           setUpsellProductsInfo(data.Response.arr);
+          setAllUpsellProductsInfo(data.Response.data);
           setIsLoading(false);
           setContent("Upsell Products Updated");
           setIsError(false);
@@ -199,6 +202,43 @@ export function UpsellProductSection() {
 
   return (
     <>
+      <Card>
+        <Stack distribution="fillEvenly">
+          <div style={{ padding: "8% 10%" }}>
+            <TextContainer>
+              <Heading id="storeDetails">Upsell Orders</Heading>
+              <p>
+                <TextStyle variation="subdued">
+                  {allUpsellProductsInfo.totalOrders}
+                </TextStyle>
+              </p>
+            </TextContainer>
+          </div>
+
+          <div style={{ padding: "8% 10%" }}>
+            <TextContainer>
+              <Heading id="storeDetails">Revenue</Heading>
+              <p>
+                <TextStyle variation="subdued">
+                  {allUpsellProductsInfo.totalPevenue}
+                </TextStyle>
+              </p>
+            </TextContainer>
+          </div>
+
+          {/* <div style={{ padding: "10% 10%" }}>
+            <TextContainer>
+              <Heading id="storeDetails">Select Product For Upsell</Heading>
+              <p>
+                <TextStyle variation="subdued">
+                  Select multiple products and s
+                </TextStyle>
+              </p>
+            </TextContainer>
+          </div> */}
+        </Stack>
+      </Card>
+
       <Page
         title="Products"
         primaryAction={
@@ -254,7 +294,7 @@ export function UpsellProductSection() {
                 <p>
                   <TextStyle variation="subdued">
                     Select multiple products and specify their quantity and
-                    priorities. in Shopify 
+                    priorities.
                   </TextStyle>
                 </p>
               </TextContainer>

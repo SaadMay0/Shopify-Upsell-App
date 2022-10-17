@@ -9,10 +9,13 @@ import { Shopify } from "@shopify/shopify-api";
 import db from "../../../db/models/postgres/index.js";
 // import { getProduct } from "../../../shopify/rest_api/product.js";
 import "colors";
+import { updateOrder } from "../../../shopify/rest_api/order.js";
+// import { FLOAT } from "sequelize/lib/data-types.js";
+// import { FLOAT } from "sequelize/lib/data-types.js";
 // const { uuidv4 } = uuid
-
+ 
 export const offer = async (req, res) => {
-  console.log(req.query.shop,"======== offer rout is Working".yellow); 
+  console.log(req.query.shop,"======== offers rout is Working".yellow); 
   let shop = req.query.shop;
   const session = await Shopify.Utils.loadOfflineSession(shop);
     const upsellProducts = await db.UpsellProducts.findOne({
@@ -102,3 +105,51 @@ export const signChangeset = async (req, res) => {
     const token = jwt.sign(payload, process.env.SHOPIFY_API_SECRET);
     res.json({ token });
 };
+
+
+export const offerAccept = async (req, res) => {
+    console.log(req.query.shop,req.query.variantId, "======== acceptOffer rout is Working".yellow);
+  let shop = req.query.shop;
+  let varId = req.query.variantId;
+    const session = await Shopify.Utils.loadOfflineSession(shop);
+   const [row, created] = await db.UpsellProducts.findOrCreate({
+     where: {
+       storeId: session.id, 
+     },
+     defaults: {
+        
+     }, 
+   });
+  if (!created) {
+    row.acceptOffer = Number(row.acceptOffer)+1;
+    row.totalOrders = Number(row.totalOrders)+1;
+    row.totalPevenue = Number(row.totalPevenue) + Number(req.body.total);
+
+    let product = row.upsellProductsInfo
+
+    const result = product.filter((ele) => {
+      if (ele.variantId=varId) {
+        ele.upsellQuantity = Number(ele.upsellQuantity) - 1;
+        ele.invantryQuantity = Number(ele.invantryQuantity-1);
+      }
+    });
+
+    await row.save();
+  }
+};
+export const offerDecline = async (req, res) => {
+    console.log(req.query.shop, "======== declineOffer rout is Working".yellow);
+    let shop = req.query.shop;
+    const session = await Shopify.Utils.loadOfflineSession(shop);
+   const [row, created] = await db.UpsellProducts.findOrCreate({
+     where: {
+       storeId: session.id,
+     },
+     defaults: {},
+   });
+   if (!created) {
+     row.totalOrders = row.totalOrders + 1;
+     row.declineOffer = row.declineOffer + 1;
+     await row.save();
+   }
+};   
