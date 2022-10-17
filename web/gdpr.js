@@ -1,4 +1,5 @@
 import { Shopify } from "@shopify/shopify-api";
+import "colors"
 
 export function setupGDPRWebHooks(path) {
   /**
@@ -11,6 +12,12 @@ export function setupGDPRWebHooks(path) {
     path,
     webhookHandler: async (topic, shop, body) => {
       const payload = JSON.parse(body);
+      console.log(
+        topic,
+        shop,
+        payload,
+        "CUSTOMERS_DATA_REQUEST web hooksis working".bgYellow
+      );
       // Payload has the following shape:
       // {
       //   "shop_id": 954889,
@@ -29,6 +36,7 @@ export function setupGDPRWebHooks(path) {
       //     "id": 9999
       //   }
       // }
+    
     },
   });
 
@@ -42,6 +50,12 @@ export function setupGDPRWebHooks(path) {
     path,
     webhookHandler: async (topic, shop, body) => {
       const payload = JSON.parse(body);
+      console.log(
+        topic,
+        shop,
+        payload,
+        "CUSTOMERS_REDACT web hooksis working".bgYellow
+      );
       // Payload has the following shape:
       // {
       //   "shop_id": 954889,
@@ -70,6 +84,12 @@ export function setupGDPRWebHooks(path) {
     path,
     webhookHandler: async (topic, shop, body) => {
       const payload = JSON.parse(body);
+        console.log(
+          topic,
+          shop,
+          payload,
+          "SHOP_REDACT web hooksis working".bgYellow
+        );
       // Payload has the following shape:
       // {
       //   "shop_id": 954889,

@@ -47,17 +47,7 @@ export const ordersCreateWebhookHandler = async (order, shop) => {
   try {
       await Shopify.Webhooks.Registry.process(req, res);
       console.log(`Webhook processed, returned status code 200`);
-    console.log(
-      "ordersCreateWebhookHandler is working from webhook handler".bgGreen
-    );
-
-    // let obj = await orderObj(order);
-    //     const [row, created] = await db.CostCenter.findOrCreate({
-    //       where: { costCenterCode: match, storeId: session.id },
-    //       defaults: {
-    //         ...body,
-    //       },
-    //     });
+    
   } catch (err) {
      console.log(`Failed to process webhook: ${err.message}`);
      if (!res.headersSent) {
@@ -70,4 +60,16 @@ export const ordersCreateWebhookHandler = async (order, shop) => {
 };
 export const appUninstalledWebhookHandler = async (_topic, shop, _body) => {
   await AppInstallations.delete(shop);
+};
+
+export const CustomersDataReqest = async (req,res) => {
+  res.status(200)
+};
+
+export const CustomersRedact = async (req, res) => {
+  res.status(200);
+};
+
+export const ShopRedact = async (req, res) => {
+  res.status(200);
 };

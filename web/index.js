@@ -8,10 +8,10 @@ import { Shopify, LATEST_API_VERSION } from "@shopify/shopify-api";
 
 import applyAuthMiddleware from "./middleware/auth.js";
 import verifyRequest from "./middleware/verify-request.js";
-import { setupGDPRWebHooks } from "./gdpr.js";
+// import { setupGDPRWebHooks } from "./gdpr.js";
 import productCreator from "./helpers/product-creator.js";
 import redirectToAuth from "./helpers/redirect-to-auth.js";
-import { BillingInterval } from "./helpers/ensure-billing.js";
+// import { BillingInterval } from "./helpers/ensure-billing.js";
 import { AppInstallations } from "./app_installations.js";
 
 import config from "./server/db/config/index.js";
@@ -75,7 +75,9 @@ const BILLING_SETTINGS = {
 //
 // More details can be found on shopify.dev:
 // https://shopify.dev/apps/webhooks/configuration/mandatory-webhooks
-setupGDPRWebHooks("/api/webhooks");
+
+
+// setupGDPRWebHooks("/api/webhooks");
 
 // export for test use only
 export async function createServer(
@@ -101,6 +103,7 @@ export async function createServer(
     try {
       await Shopify.Webhooks.Registry.process(req, res);
       console.log(`Webhook processed, returned status code 200`);
+      res.status(200);
     } catch (e) {
       console.log(`Failed to process webhook: ${e.message}`);
       if (!res.headersSent) {

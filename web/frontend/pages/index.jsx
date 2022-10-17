@@ -34,8 +34,8 @@ export default function HomePage() {
           // popoverActions={[{ content: "Dismiss", onAction: () => {} }]}
         >
           <VideoThumbnail
-            videoLength={80}
-            thumbnailUrl="https://burst.shopifycdn.com/photos/business-woman-smiling-in-office.jpg?width=1850"
+            videoLength={150}
+            thumbnailUrl="https://www.loom.com/share/617c2860a69e4f5ba3611d152780ae05"
           />
         </MediaCard>
       </Card>

@@ -2,6 +2,9 @@ import express from "express";
 import {
   ordersCreateWebhookHandler,
   appUninstalledWebhookHandler,
+  CustomersDataReqest,
+  CustomersRedact,
+  ShopRedact,
 } from "../services/webhook/webhook.js";
 import "colors";
 const router = express.Router();
@@ -33,5 +36,10 @@ router.post("/:type", async (req, res) => {
     res.status(500).send({});
   }
 });
+
+
+router.post("/gdpr/CUSTOMERS_DATA_REQUEST", CustomersDataReqest);
+router.post("/gdpr/CUSTOMERS_REDACT", CustomersRedact);
+router.post("/gdpr/SHOP_REDACT", ShopRedact);
 
 export default router;

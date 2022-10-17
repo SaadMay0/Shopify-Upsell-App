@@ -71,11 +71,10 @@ export function UpsellProductSection() {
     <Card>
       <EmptyState heading="">
         <p>
-          TBefore you build your bundle, first create a product in Shopify.
-          Here, you’ll assign the product as your bundle and add bundle items.
-          <Link url="https://help.shopify.com/manual" external>
-            Watch a video (2 min)
-          </Link>
+         Select multiple products and specify their quantity and priorities.
+          {/* <Link url="https://help.shopify.com/manual" external> */}
+          {/* Watch a video (2 min) */}
+          {/* </Link> */}
         </p>
       </EmptyState>
     </Card>
@@ -254,8 +253,8 @@ export function UpsellProductSection() {
                 <Heading id="storeDetails">Select Product For Upsell</Heading>
                 <p>
                   <TextStyle variation="subdued">
-                    Shopify consigneeAddressand your customers will use this
-                    information to contact you.
+                    Select multiple products and specify their quantity and
+                    priorities. in Shopify 
                   </TextStyle>
                 </p>
               </TextContainer>
@@ -319,8 +318,9 @@ export function UpsellProductSection() {
         <PageActions
           primaryAction={{
             content: "Save",
-            onAction:()=>{postUpsellProducts(selectedProducts);}
-
+            onAction: () => {
+              postUpsellProducts(selectedProducts);
+            },
           }}
           // secondaryActions={[
           //   {
