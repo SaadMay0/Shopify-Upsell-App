@@ -76,7 +76,6 @@ const BILLING_SETTINGS = {
 // More details can be found on shopify.dev:
 // https://shopify.dev/apps/webhooks/configuration/mandatory-webhooks
 
-
 // setupGDPRWebHooks("/api/webhooks");
 
 // export for test use only
@@ -86,15 +85,14 @@ export async function createServer(
   billingSettings = BILLING_SETTINGS
 ) {
   const app = express();
-  
+
   app.set("use-online-tokens", USE_ONLINE_TOKENS);
   app.use(cookieParser(Shopify.Context.API_SECRET_KEY));
-  
-  
+
   applyAuthMiddleware(app, {
     billing: billingSettings,
   });
-  
+
   // Do not call app.use(express.json()) before processing webhooks with
   // Shopify.Webhooks.Registry.process().
   // See https://github.com/Shopify/shopify-api-node/blob/main/docs/usage/webhooks.md#note-regarding-use-of-body-parsers
@@ -109,13 +107,52 @@ export async function createServer(
       if (!res.headersSent) {
         res.status(500).send(e.message);
       }
-    } 
+    }
   });
+
+// **************************************
+  
+  
+  app.use((req, res, next) => {
+     
+    console.log("Content-Security-Policy is working");
+     const shop = Shopify.Utils.sanitizeShop(req.query.shop);
+     if (Shopify.Context.IS_EMBEDDED_APP && shop) {
+       res.setHeader(
+         "Content-Security-Policy",
+         `frame-ancestors https://${encodeURIComponent(
+           shop
+         )} https://admin.shopify.com;`
+       );
+     } else {
+       res.setHeader("Content-Security-Policy", `frame-ancestors 'none';`);
+     }
+     next();
+   });
+
+// ************************************************
+  
   
   // All endpoints after this point will require an active session
   app.use(cors());
+  app.use("/api/v1.0/webhook", (req, res, next) => {
+    req.rawBody = "";
+    // req.setEncoding("utf8");
+    console.log("webhook middleware");
+    req
+      .on("data", (chunk) => {
+        console.log("receiving webhook data");
+        req.rawBody += chunk;
+      })
+      .on("end", () => {
+        console.log("webhook data received..");
+        // next();
+      });
+    next();
+  });
   app.use(express.json({ limit: "50mb" }));
   // app.use(express.urlencoded({ extended: false }));
+  
   mountRoutes(app);
 
   app.use(
@@ -125,57 +162,57 @@ export async function createServer(
     })
   );
 
-  app.get("/api/products/count", async (req, res) => {
-    const session = await Shopify.Utils.loadCurrentSession(
-      req,
-      res,
-      app.get("use-online-tokens")
-    );
-    const { Product } = await import( 
-      `@shopify/shopify-api/dist/rest-resources/${Shopify.Context.API_VERSION}/index.js`
-    );
+  // app.get("/api/products/count", async (req, res) => {
+  //   const session = await Shopify.Utils.loadCurrentSession(
+  //     req,
+  //     res,
+  //     app.get("use-online-tokens")
+  //   );
+  //   const { Product } = await import(
+  //     `@shopify/shopify-api/dist/rest-resources/${Shopify.Context.API_VERSION}/index.js`
+  //   );
 
-    const countData = await Product.count({ session });
-    res.status(200).send(countData);
-  });
+  //   const countData = await Product.count({ session });
+  //   res.status(200).send(countData);
+  // });
 
-  app.get("/api/products/create", async (req, res) => {
-    const session = await Shopify.Utils.loadCurrentSession(
-      req,
-      res,
-      app.get("use-online-tokens")
-    );
-    let status = 200;
-    let error = null;
+  // app.get("/api/products/create", async (req, res) => {
+  //   const session = await Shopify.Utils.loadCurrentSession(
+  //     req,
+  //     res,
+  //     app.get("use-online-tokens")
+  //   );
+  //   let status = 200;
+  //   let error = null;
 
-    try {
-      await productCreator(session);
-    } catch (e) {
-      console.log(`Failed to process products/create: ${e.message}`);
-      status = 500;
-      error = e.message;
-    }
-    res.status(status).send({ success: status === 200, error });
-  });
+  //   try {
+  //     await productCreator(session);
+  //   } catch (e) {
+  //     console.log(`Failed to process products/create: ${e.message}`);
+  //     status = 500;
+  //     error = e.message;
+  //   }
+  //   res.status(status).send({ success: status === 200, error });
+  // });
 
   // All endpoints after this point will have access to a request.body
   // attribute, as a result of the express.json() middleware
   app.use(express.json());
 
-  app.use((req, res, next) => {
-    const shop = Shopify.Utils.sanitizeShop(req.query.shop);
-    if (Shopify.Context.IS_EMBEDDED_APP && shop) {
-      res.setHeader(
-        "Content-Security-Policy",
-        `frame-ancestors https://${encodeURIComponent(
-          shop
-        )} https://admin.shopify.com;`
-      );
-    } else {
-      res.setHeader("Content-Security-Policy", `frame-ancestors 'none';`);
-    }
-    next();
-  });
+  // app.use((req, res, next) => {
+  //   const shop = Shopify.Utils.sanitizeShop(req.query.shop);
+  //   if (Shopify.Context.IS_EMBEDDED_APP && shop) {
+  //     res.setHeader(
+  //       "Content-Security-Policy",
+  //       `frame-ancestors https://${encodeURIComponent(
+  //         shop
+  //       )} https://admin.shopify.com;`
+  //     );
+  //   } else {
+  //     res.setHeader("Content-Security-Policy", `frame-ancestors 'none';`);
+  //   }
+  //   next();
+  // });
 
   if (isProd) {
     const compression = await import("compression").then(

@@ -1,7 +1,7 @@
 import { Shopify } from "@shopify/shopify-api";
 import db from "../../../db/models/postgres/index.js";
-// import { orderObj } from "../helper_functions/shopify/helper.js";
-import "colors"
+import crypto from "crypto";
+import "colors";
 
 export const AppInstallations = {
   includes: async function (shopDomain) {
@@ -45,14 +45,13 @@ export const AppInstallations = {
 
 export const ordersCreateWebhookHandler = async (order, shop) => {
   try {
-      await Shopify.Webhooks.Registry.process(req, res);
-      console.log(`Webhook processed, returned status code 200`);
-    
+    await Shopify.Webhooks.Registry.process(req, res);
+    console.log(`Webhook processed, returned status code 200`);
   } catch (err) {
-     console.log(`Failed to process webhook: ${err.message}`);
-     if (!res.headersSent) {
-       res.status(500).send(e.message);
-     }
+    console.log(`Failed to process webhook: ${err.message}`);
+    if (!res.headersSent) {
+      res.status(500).send(e.message);
+    }
     console.log("==================================");
     console.log("Failed to ordersCreateWebhookHandler.");
     console.log("==================================", err);
@@ -62,14 +61,101 @@ export const appUninstalledWebhookHandler = async (_topic, shop, _body) => {
   await AppInstallations.delete(shop);
 };
 
-export const CustomersDataReqest = async (req,res) => {
-  res.status(200)
+export const customersDataReqest = async (req, res) => {
+  // res.status(200);
+  // const bodyString = JSON.stringify(body);
+  const { body, headers, rawBody } = req;
+  const headerHMAC = headers["x-shopify-hmac-sha256"];
+  const shopifyWehookSecretKey = process.env.SHOPIFY_API_SECRET;
+
+  const providedHmac = Buffer.from(headerHMAC, "utf-8");
+  const generatedHash = Buffer.from(
+    crypto
+      .createHmac("sha256", shopifyWehookSecretKey)
+      .update(rawBody)
+      .digest("base64"),
+    "utf-8"
+  ); 
+
+  let hashEquals = false;
+
+  try {
+    hashEquals = crypto.timingSafeEqual(generatedHash, providedHmac);
+  } catch (e) {
+    hashEquals = false;
+    console.log("Errrorrr = > ", e);
+  }
+
+  console.log("hash", hashEquals);
+  // console.log(rawBody);
+
+  if (hashEquals) {
+    res.status(200);
+  }
+  res.status(401);
 };
 
-export const CustomersRedact = async (req, res) => {
-  res.status(200);
+export const customersRedact = async (req, res) => {
+  const { body, headers, rawBody } = req;
+  const headerHMAC = headers["x-shopify-hmac-sha256"];
+  const shopifyWehookSecretKey = process.env.SHOPIFY_API_SECRET;
+
+  const providedHmac = Buffer.from(headerHMAC, "utf-8");
+  const generatedHash = Buffer.from(
+    crypto
+      .createHmac("sha256", shopifyWehookSecretKey)
+      .update(rawBody)
+      .digest("base64"),
+    "utf-8"
+  );
+
+  let hashEquals = false;
+
+  try {
+    hashEquals = crypto.timingSafeEqual(generatedHash, providedHmac);
+  } catch (e) {
+    hashEquals = false;
+    console.log("Errrorrr = > ", e);
+  }
+
+  console.log("hash", hashEquals);
+  // console.log(rawBody);
+
+  if (hashEquals) {
+    res.status(200);
+  }
+  res.status(401);  
+
 };
 
-export const ShopRedact = async (req, res) => {
-  res.status(200);
+export const shopRedact = async (req, res) => {
+    const { body, headers, rawBody } = req;
+    const headerHMAC = headers["x-shopify-hmac-sha256"];
+    const shopifyWehookSecretKey = process.env.SHOPIFY_API_SECRET;
+
+    const providedHmac = Buffer.from(headerHMAC, "utf-8");
+    const generatedHash = Buffer.from(
+      crypto
+        .createHmac("sha256", shopifyWehookSecretKey)
+        .update(rawBody)
+        .digest("base64"),
+      "utf-8"
+    );
+
+    let hashEquals = false;
+
+    try {
+      hashEquals = crypto.timingSafeEqual(generatedHash, providedHmac);
+    } catch (e) {
+      hashEquals = false;
+      console.log("Errrorrr = > ", e);
+    }
+
+    console.log("hash", hashEquals);
+    // console.log(rawBody);
+
+    if (hashEquals) {
+      res.status(200);
+    }
+    res.status(401);
 };

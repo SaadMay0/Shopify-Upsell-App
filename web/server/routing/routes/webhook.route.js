@@ -2,9 +2,9 @@ import express from "express";
 import {
   ordersCreateWebhookHandler,
   appUninstalledWebhookHandler,
-  CustomersDataReqest,
-  CustomersRedact,
-  ShopRedact,
+  customersDataReqest,
+  customersRedact,
+  shopRedact,
 } from "../services/webhook/webhook.js";
 import "colors";
 const router = express.Router();
@@ -37,9 +37,8 @@ router.post("/:type", async (req, res) => {
   }
 });
 
+router.post("/gdpr/CUSTOMERS_DATA_REQUEST", customersDataReqest);
+router.post("/gdpr/CUSTOMERS_REDACT", customersRedact);
+router.post("/gdpr/SHOP_REDACT", shopRedact);
 
-router.post("/gdpr/CUSTOMERS_DATA_REQUEST", CustomersDataReqest);
-router.post("/gdpr/CUSTOMERS_REDACT", CustomersRedact);
-router.post("/gdpr/SHOP_REDACT", ShopRedact);
-
-export default router;
+export default router; 
