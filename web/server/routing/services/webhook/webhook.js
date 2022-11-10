@@ -68,26 +68,25 @@ export const customersDataReqest = async (req, res) => {
   const headerHMAC = headers["x-shopify-hmac-sha256"];
   const shopifyWehookSecretKey = process.env.SHOPIFY_API_SECRET;
 
-  const providedHmac = Buffer.from(headerHMAC, "utf-8");
-  const generatedHash = Buffer.from(
-    crypto
-      .createHmac("sha256", shopifyWehookSecretKey)
-      .update(rawBody)
-      .digest("base64"),
-    "utf-8"
-  ); 
+  // const providedHmac = Buffer.from(headerHMAC, "utf-8");
+  const generatedHash = crypto
+    .createHmac("sha256", shopifyWehookSecretKey)
+    .update(rawBody, "utf-8")
+    .digest("base64");
+    // "utf-8"
+  // ); 
+ let hashEquals = Shopify.Utils.safeCompare(generatedHash, headerHMAC);
+  // let hashEquals = false;
 
-  let hashEquals = false;
+  // try {
+  //   hashEquals = crypto.timingSafeEqual(generatedHash, providedHmac);
+  // } catch (e) {
+  //   hashEquals = false;
+  //   console.log("Errrorrr = > ", e);
+  // }
 
-  try {
-    hashEquals = crypto.timingSafeEqual(generatedHash, providedHmac);
-  } catch (e) {
-    hashEquals = false;
-    console.log("Errrorrr = > ", e);
-  }
-
-  console.log("hash", hashEquals);
-  // console.log(rawBody);
+  // console.log("hash", hashEquals);
+  // // console.log(rawBody);
 
   if (hashEquals) {
     res.status(200);
