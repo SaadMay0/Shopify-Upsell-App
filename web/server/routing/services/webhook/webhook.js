@@ -73,8 +73,22 @@ export const customersDataReqest = async (req, res) => {
     .createHmac("sha256", shopifyWehookSecretKey)
     .update(rawBody, "utf-8")
     .digest("base64");
+  
+   const againgeneratedHash = crypto
+     .createHmac("sha256", shopifyWehookSecretKey)
+     .update(rawBody)
+     .digest("base64");
     // "utf-8"
-  // ); 
+  // );
+
+  console.log(
+    "headerHMAC====>",
+    headerHMAC,
+    "generatedHash===>",
+    generatedHash,
+    "againgeneratedHash====>",
+    againgeneratedHash
+  );
  let hashEquals = Shopify.Utils.safeCompare(generatedHash, headerHMAC);
   // let hashEquals = false;
 
