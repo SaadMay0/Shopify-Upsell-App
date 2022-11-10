@@ -83,10 +83,11 @@ export const customersDataReqest = async (req, res) => {
 
   if (hashEquals) {
     res.status(200);
+    console.log("hashEquals======> True");
   } else {
-    
     res.status(401);
-  }
+    console.log("hashEquals======> false");
+  } 
 };
 
 export const customersRedact = async (req, res) => {
@@ -108,8 +109,10 @@ export const customersRedact = async (req, res) => {
 
   if (hashEquals) {
     res.status(200);
+    console.log("hashEquals======> True");
   } else {
     res.status(401);
+    console.log("hashEquals======> false");
   } 
 
 };
@@ -131,9 +134,11 @@ export const shopRedact = async (req, res) => {
 
      let hashEquals = Shopify.Utils.safeCompare(generatedHash, headerHMAC);
 
-     if (hashEquals) {
-       res.status(200);
-     } else {
-       res.status(401);
-     }
+      if (hashEquals) {
+        res.status(200);
+        console.log("hashEquals======> True");
+      } else {
+        res.status(401);
+        console.log("hashEquals======> false");
+      } 
 };

@@ -146,9 +146,9 @@ export async function createServer(
       })
       .on("end", () => {
         console.log("webhook data received..");
-        // next();
+        next();
       });
-    next();
+    // next();
   });
   app.use(express.json({ limit: "50mb" }));
   // app.use(express.urlencoded({ extended: false }));
