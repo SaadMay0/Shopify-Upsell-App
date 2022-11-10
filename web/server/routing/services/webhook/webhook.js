@@ -66,7 +66,7 @@ export const customersDataReqest = async (req, res) => {
   // const bodyString = JSON.stringify(body);
   const { body, headers, rawBody } = req;
   const headerHMAC = headers["x-shopify-hmac-sha256"];
-  const shopifyWehookSecretKey = process.env.SHOPIFY_API_SECRET;
+  const shopifyWehookSecretKey = "4e9746ad6ff63fc0bef4fd45ba512679c5a406d052ef958b8228614e7fc4d8f7";// process.env.SHOPIFY_API_SECRET;
 
   // const providedHmac = Buffer.from(headerHMAC, "utf-8");
   const generatedHash = crypto
