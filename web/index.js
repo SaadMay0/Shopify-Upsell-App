@@ -78,6 +78,7 @@ const BILLING_SETTINGS = {
 
 // setupGDPRWebHooks("/api/webhooks");
 
+
 // export for test use only
 export async function createServer(
   root = process.cwd(),
@@ -85,6 +86,22 @@ export async function createServer(
   billingSettings = BILLING_SETTINGS
 ) {
   const app = express();
+  
+   app.use("/api/v1.0/webhook", (req, res, next) => {
+     req.rawBody = "";
+     // req.setEncoding("utf8");
+     console.log("webhook middleware");
+     req
+       .on("data", (chunk) => {
+         console.log("receiving webhook data");
+         req.rawBody += chunk;
+       })
+       .on("end", () => {
+         console.log("webhook data received..");
+         // next();
+       });
+     next();
+   });
 
   app.set("use-online-tokens", USE_ONLINE_TOKENS);
   app.use(cookieParser(Shopify.Context.API_SECRET_KEY));
@@ -134,21 +151,7 @@ export async function createServer(
   
   
   // All endpoints after this point will require an active session
-  app.use("/api/v1.0/webhook", (req, res, next) => {
-    req.rawBody = "";
-    // req.setEncoding("utf8");
-    console.log("webhook middleware");
-    req
-      .on("data", (chunk) => {
-        console.log("receiving webhook data");
-        req.rawBody += chunk;
-      })
-      .on("end", () => {
-        console.log("webhook data received..");
-        // next();
-      });
-    next();
-  });
+ 
   app.use(cors());
   app.use(express.json({ limit: "50mb" }));
   // app.use(express.urlencoded({ extended: false }));
