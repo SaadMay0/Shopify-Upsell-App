@@ -134,7 +134,6 @@ export async function createServer(
   
   
   // All endpoints after this point will require an active session
-  app.use(cors());
   app.use("/api/v1.0/webhook", (req, res, next) => {
     req.rawBody = "";
     // req.setEncoding("utf8");
@@ -146,10 +145,11 @@ export async function createServer(
       })
       .on("end", () => {
         console.log("webhook data received..");
-        next();
+        // next();
       });
-    // next();
+    next();
   });
+  app.use(cors());
   app.use(express.json({ limit: "50mb" }));
   // app.use(express.urlencoded({ extended: false }));
   
