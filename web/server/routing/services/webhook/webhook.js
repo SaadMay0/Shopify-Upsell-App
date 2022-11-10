@@ -62,13 +62,11 @@ export const appUninstalledWebhookHandler = async (_topic, shop, _body) => {
 };
 
 export const customersDataReqest = async (req, res) => {
-  // res.status(200);
-  // const bodyString = JSON.stringify(body);
+  
   const { body, headers, rawBody } = req;
   const headerHMAC = headers["x-shopify-hmac-sha256"];
-  const shopifyWehookSecretKey = "4e9746ad6ff63fc0bef4fd45ba512679c5a406d052ef958b8228614e7fc4d8f7";// process.env.SHOPIFY_API_SECRET;
+  const shopifyWehookSecretKey = process.env.SHOPIFY_API_SECRET;
 
-  // const providedHmac = Buffer.from(headerHMAC, "utf-8");
   const generatedHash = crypto
     .createHmac("sha256", shopifyWehookSecretKey)
     .update(rawBody, "utf-8")
@@ -78,37 +76,16 @@ export const customersDataReqest = async (req, res) => {
      .createHmac("sha256", shopifyWehookSecretKey)
      .update(rawBody)
      .digest("base64");
-    // "utf-8"
-  // );
+ 
 
   let hashEquals = Shopify.Utils.safeCompare(generatedHash, headerHMAC);
-  console.log(
-    "headerHMAC====>",
-    headerHMAC,
-    "generatedHash===>",
-    generatedHash,
-    "againgeneratedHash====>",
-    againgeneratedHash,
-    "====>>>>",
-    hashEquals
-  );
-  // let hashEquals = false;
 
-  // try {
-  //   hashEquals = crypto.timingSafeEqual(generatedHash, providedHmac);
-  // } catch (e) {
-  //   hashEquals = false;
-  //   console.log("Errrorrr = > ", e);
-  // }
-
-  // console.log("hash", hashEquals);
-  // // console.log(rawBody);
 
   if (hashEquals) {
-    res.status(200).send("ok");
+    res.status(200);
   } else {
     
-    res.status(401).send("not okay");
+    res.status(401);
   }
 };
 
@@ -117,62 +94,46 @@ export const customersRedact = async (req, res) => {
   const headerHMAC = headers["x-shopify-hmac-sha256"];
   const shopifyWehookSecretKey = process.env.SHOPIFY_API_SECRET;
 
-  const providedHmac = Buffer.from(headerHMAC, "utf-8");
-  const generatedHash = Buffer.from(
-    crypto
-      .createHmac("sha256", shopifyWehookSecretKey)
-      .update(rawBody)
-      .digest("base64"),
-    "utf-8"
-  );
+  const generatedHash = crypto
+    .createHmac("sha256", shopifyWehookSecretKey)
+    .update(rawBody, "utf-8")
+    .digest("base64");
 
-  let hashEquals = false;
+  const againgeneratedHash = crypto
+    .createHmac("sha256", shopifyWehookSecretKey)
+    .update(rawBody)
+    .digest("base64");
 
-  try {
-    hashEquals = crypto.timingSafeEqual(generatedHash, providedHmac);
-  } catch (e) {
-    hashEquals = false;
-    console.log("Errrorrr = > ", e);
-  }
-
-  console.log("hash", hashEquals);
-  // console.log(rawBody);
+  let hashEquals = Shopify.Utils.safeCompare(generatedHash, headerHMAC);
 
   if (hashEquals) {
     res.status(200);
-  }
-  res.status(401);  
+  } else {
+    res.status(401);
+  } 
 
 };
 
 export const shopRedact = async (req, res) => {
     const { body, headers, rawBody } = req;
-    const headerHMAC = headers["x-shopify-hmac-sha256"];
-    const shopifyWehookSecretKey = process.env.SHOPIFY_API_SECRET;
+     const headerHMAC = headers["x-shopify-hmac-sha256"];
+     const shopifyWehookSecretKey = process.env.SHOPIFY_API_SECRET;
 
-    const providedHmac = Buffer.from(headerHMAC, "utf-8");
-    const generatedHash = Buffer.from(
-      crypto
-        .createHmac("sha256", shopifyWehookSecretKey)
-        .update(rawBody)
-        .digest("base64"),
-      "utf-8"
-    );
+     const generatedHash = crypto
+       .createHmac("sha256", shopifyWehookSecretKey)
+       .update(rawBody, "utf-8")
+       .digest("base64");
 
-    let hashEquals = false;
+     const againgeneratedHash = crypto
+       .createHmac("sha256", shopifyWehookSecretKey)
+       .update(rawBody)
+       .digest("base64");
 
-    try {
-      hashEquals = crypto.timingSafeEqual(generatedHash, providedHmac);
-    } catch (e) {
-      hashEquals = false;
-      console.log("Errrorrr = > ", e);
-    }
+     let hashEquals = Shopify.Utils.safeCompare(generatedHash, headerHMAC);
 
-    console.log("hash", hashEquals);
-    // console.log(rawBody);
-
-    if (hashEquals) {
-      res.status(200);
-    }
-    res.status(401);
+     if (hashEquals) {
+       res.status(200);
+     } else {
+       res.status(401);
+     }
 };
