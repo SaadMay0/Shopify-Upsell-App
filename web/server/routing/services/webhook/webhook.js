@@ -81,15 +81,17 @@ export const customersDataReqest = async (req, res) => {
     // "utf-8"
   // );
 
+  let hashEquals = Shopify.Utils.safeCompare(generatedHash, headerHMAC);
   console.log(
     "headerHMAC====>",
     headerHMAC,
     "generatedHash===>",
     generatedHash,
     "againgeneratedHash====>",
-    againgeneratedHash
+    againgeneratedHash,
+    "====>>>>",
+    hashEquals
   );
- let hashEquals = Shopify.Utils.safeCompare(generatedHash, headerHMAC);
   // let hashEquals = false;
 
   // try {
@@ -103,9 +105,11 @@ export const customersDataReqest = async (req, res) => {
   // // console.log(rawBody);
 
   if (hashEquals) {
-    res.status(200);
+    res.status(200).send("ok");
+  } else {
+    
+    res.status(401).send("not okay");
   }
-  res.status(401);
 };
 
 export const customersRedact = async (req, res) => {
