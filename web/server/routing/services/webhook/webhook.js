@@ -85,7 +85,7 @@ export const customersDataReqest = async (req, res) => {
     res.status(200);
     console.log("hashEquals======> True");
   } else {
-    res.status(401);
+    res.status(401).send('Unable to verify the webhook request');
     console.log("hashEquals======> false");
   } 
 };
