@@ -1,4 +1,4 @@
-import { Webhook } from "@shopify/shopify-api/dist/rest-resources/2022-07/index.js";
+import { Webhook } from "@shopify/shopify-api/dist/rest-resources/2022-10/index.js";
 import "colors"
 
 /**
