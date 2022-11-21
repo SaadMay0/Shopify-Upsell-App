@@ -17,6 +17,7 @@ import { AppInstallations } from "./server/routing/services/helper_functions/web
 import config from "./server/db/config/index.js";
 import mountRoutes from "./server/routing/routes/index.js";
 import webhooks from "./server/routing/routes/webhooks/index.js";
+import upsellExt from "./server/routing/routes/app_extension/index.js"
 
 const USE_ONLINE_TOKENS = false;
 
@@ -85,6 +86,12 @@ export async function createServer(
 
   // All endpoints after this point will require an active session
 
+  app.use(cors());
+  // app.use(express.json());
+  app.use(express.json({ limit: "50mb" }));
+  app.use(express.urlencoded({ extended: false }));
+upsellExt(app);
+
   app.use(
     "/api/*",
     verifyRequest(app, {
@@ -92,10 +99,6 @@ export async function createServer(
     })
   );
 
-  app.use(cors());
-  // app.use(express.json());
-  app.use(express.json({ limit: "50mb" }));
-  app.use(express.urlencoded({ extended: false }));
 
   app.use((req, res, next) => {
     console.log("Content-Security-Policy is working");
