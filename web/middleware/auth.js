@@ -4,8 +4,6 @@ import { gdprTopics } from "@shopify/shopify-api/dist/webhooks/registry.js";
 import ensureBilling from "../helpers/ensure-billing.js";
 import redirectToAuth from "../helpers/redirect-to-auth.js";
 
-
-
 import installWebhooks from "../server/shopify/install/webhook.install.js";
 import "colors";
 
@@ -14,7 +12,7 @@ export default function applyAuthMiddleware(
   { billing = { required: false } } = { billing: { required: false } }
 ) {
   app.get("/api/auth", async (req, res) => {
-    return redirectToAuth(req, res, app)
+    return redirectToAuth(req, res, app);
   });
 
   app.get("/api/auth/callback", async (req, res) => {
@@ -25,15 +23,14 @@ export default function applyAuthMiddleware(
         req.query
       );
 
-      //  if (session.accessToken) {
-      //    try {
-      // installWebhooks(session);
-      //    } catch (e) {
-      //      console.log("ignore when created".red.bold);
-      //      // ignore when created
-      //    }
-      //  }
-      //  console.log(session, "session".bgGreen);
+      if (session.accessToken) {
+        try {
+          installWebhooks(session);
+        } catch (e) {
+          console.log("ignore when created".red.bold);
+          // ignore when created
+        }
+      }
 
       const responses = await Shopify.Webhooks.Registry.registerAll({
         shop: session.shop,

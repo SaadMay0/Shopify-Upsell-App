@@ -204,12 +204,13 @@ export function UpsellProductSection() {
     <>
       <Card>
         <Stack distribution="fillEvenly">
+          <div></div>
           <div style={{ padding: "8% 10%" }}>
             <TextContainer>
               <Heading id="storeDetails">Upsell Orders</Heading>
               <p>
                 <TextStyle variation="subdued">
-                  {allUpsellProductsInfo.totalOrders}
+                  {allUpsellProductsInfo.totalOrders ?? 0}
                 </TextStyle>
               </p>
             </TextContainer>
@@ -220,7 +221,7 @@ export function UpsellProductSection() {
               <Heading id="storeDetails">Revenue</Heading>
               <p>
                 <TextStyle variation="subdued">
-                  {allUpsellProductsInfo.totalPevenue}
+                  {allUpsellProductsInfo.totalPevenue ?? 0}
                 </TextStyle>
               </p>
             </TextContainer>
@@ -236,6 +237,7 @@ export function UpsellProductSection() {
               </p>
             </TextContainer>
           </div> */}
+          <div></div>
         </Stack>
       </Card>
 
