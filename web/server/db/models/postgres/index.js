@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 import fs from "fs";
 import path from "path";
 import Sequelize from "sequelize";
@@ -21,15 +21,18 @@ DataTypes.DATE.prototype._stringify = function _stringify(date, options) {
   return date.format("YYYY-MM-DD HH:mm:ss.SSS");
 };
 
+// const sequelize = new Sequelize(
+//   DATABASE.DATABASE,
+//   DATABASE.USERNAME,
+//   DATABASE.PASSWORD,
+//   {
+//     host: DATABASE.HOST,
+//     dialect: DATABASE.DIALECT,
+//     logging: DATABASE.LOGGING || console.log,
+//   }
+// );
 const sequelize = new Sequelize(
-  DATABASE.DATABASE,
-  DATABASE.USERNAME,
-  DATABASE.PASSWORD,
-  {
-    host: DATABASE.HOST,
-    dialect: DATABASE.DIALECT,
-    logging: DATABASE.LOGGING || console.log,
-  }
+  `${DATABASE.DIALECT}://${DATABASE.USERNAME}:${DATABASE.PASSWORD}@${DATABASE.HOST}/${DATABASE.DATABASE}?host=${DATABASE.INSTANCE_CONNECTION_NAME}`
 );
 
 fs.readdirSync(__dirname)
@@ -43,7 +46,6 @@ fs.readdirSync(__dirname)
 
     const modelFunc = await import(modelPath);
     const model = modelFunc.default(sequelize, Sequelize);
-
 
     db[model.name] = model;
   });

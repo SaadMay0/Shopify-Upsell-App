@@ -31,11 +31,6 @@ const PROD_INDEX_PATH = `${process.cwd()}/frontend/dist/`;
 
 const DB_PATH = `${process.cwd()}/database.sqlite`;
 
-console.log("SHOPIFY_API_KEY", process.env.SHOPIFY_API_KEY);
-console.log("SHOPIFY_API_SECRET", process.env.SHOPIFY_API_SECRET);
-console.log("HOST", process.env.HOST);
-console.log("DB_HOST", DATABASE.HOST);
-
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
   API_SECRET_KEY: process.env.SHOPIFY_API_SECRET,
@@ -51,7 +46,7 @@ Shopify.Context.initialize({
   // @ts-ignore
   SESSION_STORAGE: new Shopify.Session.PostgreSQLSessionStorage(
     // @ts-ignore
-    `postgres://${DATABASE.USERNAME}:${DATABASE.PASSWORD}@${DATABASE.HOST}/${DATABASE.DATABASE}?host=/cloudsql/hypeup-372107:us-central1:hypeup-postgres`,
+    `${DATABASE.DIALECT}://${DATABASE.USERNAME}:${DATABASE.PASSWORD}@${DATABASE.HOST}/${DATABASE.DATABASE}?host=${DATABASE.INSTANCE_CONNECTION_NAME}`,
     {
       sessionTableName: "store",
       port: 5432,

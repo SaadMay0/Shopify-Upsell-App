@@ -36,28 +36,24 @@ export function UpsellProductSection() {
   const [isError, setIsError] = useState(false);
 
   //Callback
-    const toggleActive = useCallback(() => setActive((active) => !active), []);
+  const toggleActive = useCallback(() => setActive((active) => !active), []);
 
+  const handleUpsellProductsQuantityChange = (arrayIndex) => (ele) => {
+    console.log(ele, "handleUpsellProductsQuantityChange");
+    upsellProductsInfo[arrayIndex].upsellQuantity = ele;
 
-    const handleUpsellProductsQuantityChange = (arrayIndex) => (ele) => {
-        console.log(ele, "handleUpsellProductsQuantityChange");
-        upsellProductsInfo[arrayIndex].upsellQuantity = ele;
+    setUpsellProductsInfo([...upsellProductsInfo]);
+  };
 
-        setUpsellProductsInfo([...upsellProductsInfo]);
-
-    }
-  
   const handleUpsellPriorityChange = (arrayIndex) => (ele) => {
     console.log(ele, "handleUpsellPriorityChange");
     upsellProductsInfo[arrayIndex].upsellPriority = ele;
 
     setUpsellProductsInfo([...upsellProductsInfo]);
   };
-  
-  
-  //useCallback((value) => setSortValue(value), []);
-    // console.log(upsellProductsInfo,"After Handle");
 
+  //useCallback((value) => setSortValue(value), []);
+  // console.log(upsellProductsInfo,"After Handle");
 
   let ren = (
     <ToastComponent
@@ -72,7 +68,7 @@ export function UpsellProductSection() {
     <Card>
       <EmptyState heading="">
         <p>
-         Select multiple products and specify their quantity and priorities.
+          Select multiple products and specify their quantity and priorities.
           {/* <Link url="https://help.shopify.com/manual" external> */}
           {/* Watch a video (2 min) */}
           {/* </Link> */}
@@ -101,20 +97,20 @@ export function UpsellProductSection() {
         .then((response) => response.json())
         .then((data) => {
           console.log("getProducts ======>");
-        //   setIsLoading(true);
-            if (data.Response.data) {
-              setSelectedProducts(data.Response.data.upsellProducts);
-              setUpsellProductsInfo(data.Response.data.upsellProductsInfo);
-              setAllUpsellProductsInfo(data.Response.data);
-              setContent("Get All Upsell Products");
-              setIsError(false);
-              setActive(true);
-            } else {
-              setContent("Select Upsell Products");
-              setIsError(false);
-              setActive(true);
-            }
-            setIsLoading(false);
+          //   setIsLoading(true);
+          if (data.Response.data) {
+            setSelectedProducts(data.Response.data.upsellProducts);
+            setUpsellProductsInfo(data.Response.data.upsellProductsInfo);
+            setAllUpsellProductsInfo(data.Response.data);
+            setContent("Get All Upsell Products");
+            setIsError(false);
+            setActive(true);
+          } else {
+            setContent("Select Upsell Products");
+            setIsError(false);
+            setActive(true);
+          }
+          setIsLoading(false);
 
           console.log("getProducts get Upsell *******************");
           return data;
@@ -157,11 +153,11 @@ export function UpsellProductSection() {
     }
   }
 
-    const sortOptions = [
-      { value: "High", label: "High" },
-      { value: "Medium", label: "Medium" },
-      { value: "Low", label: "Low" },
-    ];
+  const sortOptions = [
+    { value: "High", label: "High" },
+    { value: "Medium", label: "Medium" },
+    { value: "Low", label: "Low" },
+  ];
 
   const rowMarkup = upsellProductsInfo.map((productele, index) => {
     return (
@@ -195,7 +191,6 @@ export function UpsellProductSection() {
             onChange={handleUpsellPriorityChange(index)}
           />
         </IndexTable.Cell>
-     
       </IndexTable.Row>
     );
   });
