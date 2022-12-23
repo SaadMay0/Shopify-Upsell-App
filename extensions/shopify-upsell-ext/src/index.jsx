@@ -39,19 +39,28 @@ extend(
   "Checkout::PostPurchase::ShouldRender",
   async ({ storage, inputData }) => {
     let shop = inputData.shop.domain;
+    // let render = true;
     const postPurchaseOffer = await fetch(
       // `https://hypeup-app-w5hlofsvsa-uc.a.run.app/api/offer?shop=${shop}`
-      `https://c481-110-39-147-226.ngrok.io/api/offer?shop=${shop}`
+      `https://17cd-110-39-147-226.ngrok.io/api/offer?shop=${shop}`
     ).then((res) => {
-      // console.log(res, "------postPurchaseOffer------");
+      console.log(res, "------postPurchaseOffer------");
       return res.json();
     });
 
     console.log(storage, "env File cheeck", inputData);
 
-    await storage.update(postPurchaseOffer);
+    if (postPurchaseOffer) {
+      console.log(postPurchaseOffer, "Passs If condition postPurchaseOffer");
 
-    return { render: true };
+      await storage.update(postPurchaseOffer);
+      return {render:true};
+    } else {
+      console.log("Fail If condition postPurchaseOffer");
+      return {render:false};
+    }
+
+
   }
 );
 
@@ -86,6 +95,18 @@ export function App() {
 
   const { variantId, productTitle, productImageURL, productDescription } =
     storage.initialData;
+  
+  console.log(
+    variantId,
+    productTitle,
+    productImageURL,
+    "calculatedPurchase===>",
+    calculatedPurchase,
+    " storage=====>",
+    storage,
+    " inputData====>",
+    inputData
+  );
 
   const changes = [{ type: "add_variant", variantId, quantity: 1 }];
 
@@ -101,6 +122,10 @@ export function App() {
       .amount;
   const originalPrice =
     calculatedPurchase?.updatedLineItems[0].priceSet.presentmentMoney.amount;
+  
+  const currency =
+    calculatedPurchase?.updatedLineItems[0].priceSet.presentmentMoney
+      .currencyCode;
 
   async function acceptOffer() {
     setLoading(true);
@@ -108,7 +133,7 @@ export function App() {
     // Make a request to your app server to sign the changeset
     const token = await fetch(
       // "https://hypeup-app-w5hlofsvsa-uc.a.run.app/api/sign-changeset",
-      "https://c481-110-39-147-226.ngrok.io/api/sign-changeset",
+      "https://17cd-110-39-147-226.ngrok.io/api/sign-changeset",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -136,8 +161,8 @@ export function App() {
   // console.log( "------applyChangeset-------", inputData.token);
   async function updateData(total, variantId) {
     const token = await fetch(
-      `https://hypeup-app-w5hlofsvsa-uc.a.run.app/api/offerAccept?shop=${shopName}`,
-      //  `https://5523-124-29-217-86.ngrok.io/api/offerAccept?shop=${shopName}`,
+      // `https://hypeup-app-w5hlofsvsa-uc.a.run.app/api/offerAccept?shop=${shopName}`,
+      `https://17cd-110-39-147-226.ngrok.io/api/offerAccept?shop=${shopName}&variantId=${variantId}&total=${total}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -156,8 +181,8 @@ export function App() {
 
   async function updateDataAtDecline() {
     const token = await fetch(
-      `https://hypeup-app-w5hlofsvsa-uc.a.run.app/api/offerDecline?shop=${shopName}`,
-      // `https://5523-124-29-217-86.ngrok.io/api/offerDecline?shop=${shopName}`,
+      // `https://hypeup-app-w5hlofsvsa-uc.a.run.app/api/offerDecline?shop=${shopName}`,
+      `https://17cd-110-39-147-226.ngrok.io/api/offerDecline?shop=${shopName}`,
       {
         method: "GET",
         headers: { "Content-Type": "application/json" },
@@ -212,6 +237,7 @@ export function App() {
             discountedPrice={discountedPrice}
             originalPrice={originalPrice}
             loading={!calculatedPurchase}
+            currency={currency}
           />
           {/* <ProductDescription textLines={productDescription} /> */}
           <BlockStack spacing="tight">
@@ -220,33 +246,38 @@ export function App() {
               label="Subtotal"
               amount={discountedPrice}
               loading={!calculatedPurchase}
+              currency={currency}
             />
             <MoneyLine
               label="Shipping"
               amount={shipping}
               loading={!calculatedPurchase}
+              currency={currency}
             />
             <MoneyLine
               label="Taxes"
               amount={taxes}
               loading={!calculatedPurchase}
+              currency={currency}
             />
             <Separator />
             <MoneySummary
               label="Total"
               amount={total}
               loading={!calculatedPurchase}
+              currency={currency}
             />
           </BlockStack>
           <BlockStack>
             <Button
               onPress={() => {
-                acceptOffer(), updateData(total, variantId);
+                console.log("****",total, variantId,"Purchase*****");
+                updateData(total, variantId), acceptOffer(); 
               }}
               submit
               loading={loading}
             >
-              Buy now · {formatCurrency(total)}
+              Buy now · {formatCurrency(total, currency)}
             </Button>
             <Button onPress={declineOffer} subdued loading={loading}>
               Decline this offer
@@ -258,15 +289,15 @@ export function App() {
   );
 }
 
-function PriceHeader({ discountedPrice, originalPrice, loading }) {
+function PriceHeader({ discountedPrice, originalPrice, loading, currency }) {
   return (
     <TextContainer alignment="leading" spacing="loose">
       <Text role="deletion" size="large">
-        {!loading && formatCurrency(originalPrice)}
+        {!loading && formatCurrency(originalPrice, currency)}
       </Text>
       <Text emphasized size="large" appearance="critical">
         {" "}
-        {!loading && formatCurrency(discountedPrice)}
+        {!loading && formatCurrency(discountedPrice, currency)}
       </Text>
     </TextContainer>
   );
@@ -284,20 +315,20 @@ function ProductDescription({ textLines }) {
   );
 }
 
-function MoneyLine({ label, amount, loading = false }) {
+function MoneyLine({ label, amount, loading = false, currency }) {
   return (
     <Tiles>
       <TextBlock size="small">{label}</TextBlock>
       <TextContainer alignment="trailing">
         <TextBlock emphasized size="small">
-          {loading ? "-" : formatCurrency(amount)}
+          {loading ? "-" : formatCurrency(amount, currency)}
         </TextBlock>
       </TextContainer>
     </Tiles>
   );
 }
 
-function MoneySummary({ label, amount }) {
+function MoneySummary({ label, amount, currency }) {
   return (
     <Tiles>
       <TextBlock size="medium" emphasized>
@@ -305,16 +336,16 @@ function MoneySummary({ label, amount }) {
       </TextBlock>
       <TextContainer alignment="trailing">
         <TextBlock emphasized size="medium">
-          {formatCurrency(amount)}
+          {formatCurrency(amount, currency)}
         </TextBlock>
       </TextContainer>
     </Tiles>
   );
 }
 
-function formatCurrency(amount) {
+function formatCurrency(amount, currency) {
   if (!amount || parseInt(amount, 10) === 0) {
     return "Free";
   }
-  return `$${amount}`;
+  return `${currency} ${amount}`;
 }
