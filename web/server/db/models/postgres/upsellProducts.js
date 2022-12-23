@@ -23,15 +23,6 @@ export default (sequelize, DataTypes) => {
         allowNull: false,
         autoIncrement: false,
       },
-      upsellProducts: {
-        type: DataTypes.TEXT,
-        get: function () {
-          return JSON.parse(this.getDataValue("upsellProducts"));
-        },
-        set: function (val) {
-          return this.setDataValue("upsellProducts", JSON.stringify(val));
-        },
-      },
 
       totalOrders: {
         allowNull: false,
@@ -64,6 +55,15 @@ export default (sequelize, DataTypes) => {
         },
         set: function (val) {
           return this.setDataValue("upsellProductsInfo", JSON.stringify(val));
+        },
+      },
+      upsellProducts: {
+        type: DataTypes.TEXT,
+        get: function () {
+          return JSON.parse(this.getDataValue("upsellProducts"));
+        },
+        set: function (val) {
+          return this.setDataValue("upsellProducts", JSON.stringify(val));
         },
       },
       storeId: {

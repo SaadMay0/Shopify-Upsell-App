@@ -17,11 +17,6 @@ module.exports = {
           defaultValue: Sequelize.UUIDV4,
         },
 
-        upsellProducts: {
-          allowNull: false,
-          type: Sequelize.TEXT,
-        },
-
         totalOrders: {
           allowNull: false,
           type: Sequelize.INTEGER,
@@ -41,8 +36,13 @@ module.exports = {
         storeCurrency: {
           allowNull: false,
           type: Sequelize.STRING,
+          defaultValue: "$",
         },
         upsellProductsInfo: {
+          allowNull: false,
+          type: Sequelize.TEXT,
+        },
+        upsellProducts: {
           allowNull: false,
           type: Sequelize.TEXT,
         },

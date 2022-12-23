@@ -30,11 +30,11 @@ export const postSelectUpSellProducts = async (req, res) => {
     // getProduct;
     let arr = [];
     console.log(
-      "Selected Product length is ",
-      upsellProducts.length,
+      "Selected Product length is ".cyan,
+      upsellProducts,
       "upsellProducts".bgCyan,
       // session
-      // upsellProductsInfo,
+      upsellProductsInfo,
     );
 
     let shopData = await getShopData(session)

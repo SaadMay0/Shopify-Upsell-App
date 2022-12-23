@@ -16,7 +16,7 @@ import { render } from "react-dom";
 export default function HomePage() {
   return (
     <Page narrowWidth>
-      <TitleBar title="App name" primaryAction={null} />
+      <TitleBar title="HypeUp" primaryAction={null} />
 
       <Card style={{ height: "50vh" }}>
         <MediaCard

@@ -17,6 +17,10 @@ import {
   Select,
   PageActions,
   // Text,
+  SkeletonPage,
+  SkeletonBodyText,
+  SkeletonDisplayText,
+  // TextContainer,
 } from "@shopify/polaris";
 import { ImageMajor } from "@shopify/polaris-icons";
 import { ResourcePicker } from "@shopify/app-bridge-react";
@@ -83,7 +87,7 @@ export function UpsellProductSection() {
   };
 
   useEffect(() => {
-    // setIsLoading(true);
+    setIsLoading(true);
     getUpsellProducts();
   }, []);
 
@@ -198,30 +202,50 @@ export function UpsellProductSection() {
 
   return (
     <>
-      <div style={{ padding: "2% 2%" }}>
-        <Card>
-          <Stack distribution="fillEvenly">
-            <div></div>
-            <div style={{ padding: "8% 10%" }}>
-              <TextContainer>
-                <Heading id="storeDetails">Upsell Orders</Heading>
-                <p style={{ padding: "2% 15%" }}>
-                  {allUpsellProductsInfo.totalOrders ?? 0}
-                </p>
-              </TextContainer>
-            </div>
+      {isLoading ? (
+        <>
+          <Card sectioned>
+            <SkeletonBodyText />
+          </Card>
+          <SkeletonPage primaryAction>
+            <Layout>
+              <Layout.Section>
+                <Card sectioned>
+                  <SkeletonBodyText />
+                </Card>
+                <Card sectioned>
+                  <SkeletonBodyText />
+                </Card>
+              </Layout.Section>
+            </Layout>
+          </SkeletonPage>
+        </>
+      ) : (
+        <>
+          <div style={{ padding: "2% 2%" }}>
+            <Card>
+              <Stack distribution="fillEvenly">
+                <div></div>
+                <div style={{ padding: "8% 10%" }}>
+                  <TextContainer>
+                    <Heading id="storeDetails">Upsell Orders</Heading>
+                    <p >
+                      {allUpsellProductsInfo.totalOrders ?? 0}
+                    </p>
+                  </TextContainer>
+                </div>
 
-            <div style={{ padding: "8% 10%" }}>
-              <TextContainer>
-                <Heading id="storeDetails">Revenue</Heading>
-                <p style={{ padding: "2% 15%" }}>
-                  {`${allUpsellProductsInfo.storeCurrency} `??"$. "}
-                  {allUpsellProductsInfo.totalPevenue ?? 0}
-                </p>
-              </TextContainer>
-            </div>
+                <div style={{ padding: "8% 10%" }}>
+                  <TextContainer>
+                    <Heading id="storeDetails">Revenue</Heading>
+                    <p>
+                      {allUpsellProductsInfo?.storeCurrency ?? "$ "}
+                      {allUpsellProductsInfo.totalPevenue ?? 0}
+                    </p>
+                  </TextContainer>
+                </div>
 
-            {/* <div style={{ padding: "10% 10%" }}>
+                {/* <div style={{ padding: "10% 10%" }}>
             <TextContainer>
             <Heading id="storeDetails">Select Product For Upsell</Heading>
             <p>
@@ -231,60 +255,59 @@ export function UpsellProductSection() {
               </p>
             </TextContainer>
           </div> */}
-            <div></div>
-          </Stack>
-        </Card>
-      </div>
-
-      <Page
-        title="Products"
-        primaryAction={
-          <>
-            <Button
-              primary
-              onClick={() => {
-                setResourceState(true);
+                <div></div>
+              </Stack>
+            </Card>
+          </div>
+          <Page
+            title="Products"
+            primaryAction={
+              <>
+                <Button
+                  primary
+                  onClick={() => {
+                    setResourceState(true);
+                  }}
+                >
+                  Select Products
+                </Button>
+              </>
+            }
+          >
+            <ResourcePicker
+              resourceType="Product"
+              showVariants={true}
+              open={ResourcePickerState}
+              initialSelectionIds={selectedProducts}
+              selectMultiple={3}
+              onCancel={() => {
+                setResourceState(false);
               }}
-            >
-              Select Products
-            </Button>
-          </>
-        }
-      >
-        <ResourcePicker
-          resourceType="Product"
-          showVariants={true}
-          open={ResourcePickerState}
-          initialSelectionIds={selectedProducts}
-          selectMultiple={3}
-          onCancel={() => {
-            setResourceState(false);
-          }}
-          onSelection={(ele) => {
-            setResourceState(false);
-            setIsLoading(true);
-            //   let arr = [];
-            let allProducts = ele.selection;
-            allProducts.map((ele) => {
-              Object.assign(ele, {
-                upsellQuantity: 1,
-                upsellPriority: "High",
-              });
-              // let obj = {
-              //   img: product.image.src,
-              //   productName: product.title,
-              //   selectedVariants: `${ele.variants.length} of ${product.variants.length}`,
-              // };
-              // arr.push(obj);
-            });
-            console.log("====>", allProducts);
-            postUpsellProducts(allProducts);
-            setSelectedProducts(allProducts);
-          }}
-        />
+              onSelection={(ele) => {
+                setResourceState(false);
+                setIsLoading(true);
+                //   let arr = [];
+                let allProducts = ele.selection;
+                allProducts.map((ele) => {
+                  Object.assign(ele, {
+                    upsellQuantity: 1,
+                    upsellPriority: "High",
+                  });
+                  // let obj = {
+                  //   img: product.image.src,
+                  //   productName: product.title,
+                  //   selectedVariants: `${ele.variants.length} of ${product.variants.length}`,
+                  // };
+                  // arr.push(obj);
+                });
+                console.log("====>", allProducts);
+                postUpsellProducts(allProducts);
+                setSelectedProducts(allProducts);
+              }}
+            />
 
-        <Layout fullWidth>
-          {/* <Layout.Section oneThird>
+            <Layout fullWidth>
+              {/* <Layout.Section oneThird>
             <div style={{ marginTop: "var(--p-space-5)" }}>
               <TextContainer>
                 <Heading id="storeDetails">Select Product For Upsell</Heading>
@@ -297,44 +320,47 @@ export function UpsellProductSection() {
               </TextContainer>
             </div>
           </Layout.Section> */}
-          <Layout.Section>
-            <Card>
-              {isLoading ? (
-                <div style={{ padding: "10% 50%" }}>
-                  <Spinner accessibilityLabel="Spinner example" size="large" />
-                </div>
-              ) : // {
-              selectedProducts.length == 0 ? (
-                empty
-              ) : (
+              <Layout.Section>
                 <Card>
-                  <Card>
-                    <Card.Section>
-                      <IndexTable
-                        resourceName={resourceName}
-                        itemCount={selectedProducts.length}
-                        loading={isLoading}
-                        headings={[
-                          { title: "Product" },
-                          { title: "Quantity" },
-                          { title: "Priority" },
-                        ]}
-                        selectable={false}
-                      >
-                        {rowMarkup}
-                        {console.log("log-6", rowMarkup)}
-                      </IndexTable>
-                    </Card.Section>
+                  {isLoading ? (
+                    <div style={{ padding: "10% 50%" }}>
+                      <Spinner
+                        accessibilityLabel="Spinner example"
+                        size="large"
+                      />
+                    </div>
+                  ) : // {
+                  selectedProducts.length == 0 ? (
+                    empty
+                  ) : (
+                    <Card>
+                      <Card>
+                        <Card.Section>
+                          <IndexTable
+                            resourceName={resourceName}
+                            itemCount={selectedProducts.length}
+                            loading={isLoading}
+                            headings={[
+                              { title: "Product" },
+                              { title: "Quantity" },
+                              { title: "Priority" },
+                            ]}
+                            selectable={false}
+                          >
+                            {rowMarkup}
+                            {console.log("log-6", rowMarkup)}
+                          </IndexTable>
+                        </Card.Section>
 
-                    <p
-                      style={{
-                        textAlign: "center",
-                        width: "100%",
-                        padding: "2%",
-                      }}
-                    >{`Showing ${selectedProducts.length} of ${selectedProducts.length} results`}</p>
-                  </Card>
-                  {/* <div className="pages">
+                        <p
+                          style={{
+                            textAlign: "center",
+                            width: "100%",
+                            padding: "2%",
+                          }}
+                        >{`Showing ${selectedProducts.length} of ${selectedProducts.length} results`}</p>
+                      </Card>
+                      {/* <div className="pages">
                   <Pagination
                     hasPrevious
                     onPrevious={() => {
@@ -346,28 +372,30 @@ export function UpsellProductSection() {
                     }}
                   />
                 </div> */}
+                    </Card>
+                  )}
+                  {/* } */}
                 </Card>
-              )}
-              {/* } */}
-            </Card>
-          </Layout.Section>
-        </Layout>
-        <PageActions
-          primaryAction={{
-            content: "Save",
-            onAction: () => {
-              postUpsellProducts(selectedProducts);
-            },
-          }}
-          // secondaryActions={[
-          //   {
-          //     content: "Delete",
-          //     destructive: true,
-          //   },
-          // ]}
-        />
-        {active ? ren : null}
-      </Page>
+              </Layout.Section>
+            </Layout>
+            <PageActions
+              primaryAction={{
+                content: "Save",
+                onAction: () => {
+                  postUpsellProducts(selectedProducts);
+                },
+              }}
+              // secondaryActions={[
+              //   {
+              //     content: "Delete",
+              //     destructive: true,
+              //   },
+              // ]}
+            />
+            {active ? ren : null}
+          </Page>
+        </>
+      )}
     </>
   );
 }
