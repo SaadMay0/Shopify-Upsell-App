@@ -40,8 +40,8 @@ extend(
   async ({ storage, inputData }) => {
     let shop = inputData.shop.domain;
     const postPurchaseOffer = await fetch(
-      `https://hypeup-app-w5hlofsvsa-uc.a.run.app/api/offer?shop=${shop}`
-      // `https://5523-124-29-217-86.ngrok.io/api/offer?shop=${shop}`
+      // `https://hypeup-app-w5hlofsvsa-uc.a.run.app/api/offer?shop=${shop}`
+      `https://c481-110-39-147-226.ngrok.io/api/offer?shop=${shop}`
     ).then((res) => {
       // console.log(res, "------postPurchaseOffer------");
       return res.json();
@@ -107,8 +107,8 @@ export function App() {
 
     // Make a request to your app server to sign the changeset
     const token = await fetch(
-      "https://hypeup-app-w5hlofsvsa-uc.a.run.app/api/sign-changeset",
-      // "https://5523-124-29-217-86.ngrok.io/api/sign-changeset",
+      // "https://hypeup-app-w5hlofsvsa-uc.a.run.app/api/sign-changeset",
+      "https://c481-110-39-147-226.ngrok.io/api/sign-changeset",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

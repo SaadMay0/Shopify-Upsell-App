@@ -16,6 +16,7 @@ import {
   TextField,
   Select,
   PageActions,
+  // Text,
 } from "@shopify/polaris";
 import { ImageMajor } from "@shopify/polaris-icons";
 import { ResourcePicker } from "@shopify/app-bridge-react";
@@ -169,9 +170,9 @@ export function UpsellProductSection() {
               alt="Black orange scarf"
               size="large"
             />
-            <TextStyle>
+            <p>
               {productele.productName} <br /> {productele.selectedVariants}
-            </TextStyle>
+            </p>
           </Stack>
         </IndexTable.Cell>
         <IndexTable.Cell>
@@ -197,44 +198,43 @@ export function UpsellProductSection() {
 
   return (
     <>
-      <Card>
-        <Stack distribution="fillEvenly">
-          <div></div>
-          <div style={{ padding: "8% 10%" }}>
-            <TextContainer>
-              <Heading id="storeDetails">Upsell Orders</Heading>
-              <p>
-                <TextStyle variation="subdued">
+      <div style={{ padding: "2% 2%" }}>
+        <Card>
+          <Stack distribution="fillEvenly">
+            <div></div>
+            <div style={{ padding: "8% 10%" }}>
+              <TextContainer>
+                <Heading id="storeDetails">Upsell Orders</Heading>
+                <p style={{ padding: "2% 15%" }}>
                   {allUpsellProductsInfo.totalOrders ?? 0}
-                </TextStyle>
-              </p>
-            </TextContainer>
-          </div>
+                </p>
+              </TextContainer>
+            </div>
 
-          <div style={{ padding: "8% 10%" }}>
-            <TextContainer>
-              <Heading id="storeDetails">Revenue</Heading>
-              <p>
-                <TextStyle variation="subdued">
+            <div style={{ padding: "8% 10%" }}>
+              <TextContainer>
+                <Heading id="storeDetails">Revenue</Heading>
+                <p style={{ padding: "2% 15%" }}>
+                  {`${allUpsellProductsInfo.storeCurrency} `??"$. "}
                   {allUpsellProductsInfo.totalPevenue ?? 0}
-                </TextStyle>
-              </p>
-            </TextContainer>
-          </div>
+                </p>
+              </TextContainer>
+            </div>
 
-          {/* <div style={{ padding: "10% 10%" }}>
+            {/* <div style={{ padding: "10% 10%" }}>
             <TextContainer>
-              <Heading id="storeDetails">Select Product For Upsell</Heading>
-              <p>
-                <TextStyle variation="subdued">
-                  Select multiple products and s
-                </TextStyle>
+            <Heading id="storeDetails">Select Product For Upsell</Heading>
+            <p>
+            <TextStyle variation="subdued">
+            Select multiple products and s
+            </TextStyle>
               </p>
             </TextContainer>
           </div> */}
-          <div></div>
-        </Stack>
-      </Card>
+            <div></div>
+          </Stack>
+        </Card>
+      </div>
 
       <Page
         title="Products"
@@ -284,7 +284,7 @@ export function UpsellProductSection() {
         />
 
         <Layout fullWidth>
-          <Layout.Section oneThird>
+          {/* <Layout.Section oneThird>
             <div style={{ marginTop: "var(--p-space-5)" }}>
               <TextContainer>
                 <Heading id="storeDetails">Select Product For Upsell</Heading>
@@ -296,7 +296,7 @@ export function UpsellProductSection() {
                 </p>
               </TextContainer>
             </div>
-          </Layout.Section>
+          </Layout.Section> */}
           <Layout.Section>
             <Card>
               {isLoading ? (

@@ -1,5 +1,5 @@
 import { Shopify } from "@shopify/shopify-api";
-import { Product } from "@shopify/shopify-api/dist/rest-resources/2022-10/index.js";
+import { Product } from "@shopify/shopify-api/dist/rest-resources/2022-07/index.js";
 import "colors";
 
 // Product
@@ -24,5 +24,5 @@ export const getProduct = async (session, id) => {
     });
   } catch (err) {
     console.log(` Catch Error of Get Product = ${err.name}`, err);
-  }
+  } 
 };

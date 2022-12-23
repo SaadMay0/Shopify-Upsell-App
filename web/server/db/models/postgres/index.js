@@ -21,19 +21,19 @@ DataTypes.DATE.prototype._stringify = function _stringify(date, options) {
   return date.format("YYYY-MM-DD HH:mm:ss.SSS");
 };
 
-// const sequelize = new Sequelize(
-//   DATABASE.DATABASE,
-//   DATABASE.USERNAME,
-//   DATABASE.PASSWORD,
-//   {
-//     host: DATABASE.HOST,
-//     dialect: DATABASE.DIALECT,
-//     logging: DATABASE.LOGGING || console.log,
-//   }
-// );
 const sequelize = new Sequelize(
-  `${DATABASE.DIALECT}://${DATABASE.USERNAME}:${DATABASE.PASSWORD}@${DATABASE.HOST}/${DATABASE.DATABASE}?host=${DATABASE.INSTANCE_CONNECTION_NAME}`
+  DATABASE.DATABASE,
+  DATABASE.USERNAME,
+  DATABASE.PASSWORD,
+  {
+    host: DATABASE.HOST,
+    dialect: DATABASE.DIALECT,
+    logging: DATABASE.LOGGING || console.log,
+  }
 );
+// const sequelize = new Sequelize(
+//   `${DATABASE.DIALECT}://${DATABASE.USERNAME}:${DATABASE.PASSWORD}@${DATABASE.HOST}/${DATABASE.DATABASE}?host=${DATABASE.INSTANCE_CONNECTION_NAME}`
+// );
 
 fs.readdirSync(__dirname)
   .filter((file) => {

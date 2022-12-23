@@ -1,6 +1,7 @@
 import { Shopify } from "@shopify/shopify-api";
 import db from "../../../db/models/postgres/index.js";
 import { getProduct } from "../../../shopify/rest_api/product.js";
+import { getShopData } from "../../../shopify/rest_api/shop.js";
 import "colors";
 
 export const getUpsellProducts = async (req, res) => {
@@ -32,14 +33,20 @@ export const postSelectUpSellProducts = async (req, res) => {
       "Selected Product length is ",
       upsellProducts.length,
       "upsellProducts".bgCyan,
-      session,
+      // session
       // upsellProductsInfo,
     );
+
+    let shopData = await getShopData(session)
+
+    // console.log(shopData, "<========Shop data", shopData[0].money_format.split(".").shift());
+
     await Promise.all(
       upsellProducts.map(async (ele) => {
-
         const result = upsellProductsInfo.filter(
-           (items) =>  {return items.id == ele.id.split("/").pop()}
+          (items) => {
+            return items.id == ele.id.split("/").pop();
+          }
 
           // {
 
@@ -63,14 +70,14 @@ export const postSelectUpSellProducts = async (req, res) => {
 
           // }
         );
-        if (result.length==1) {
-           console.log(result, "Result from if condition ".yellow);
+        if (result.length == 1) {
+          console.log(result, "Result from if condition ".yellow);
           arr.push(...result);
         } else {
           let product = await getProduct(session, ele.id.split("/").pop());
           delete product.session;
           // console.log(product,"Cheeck Inventery".red);
-          let productImag = product.image?product.image.src:null;
+          let productImag = product.image ? product.image.src : null;
           let obj = {
             id: ele.id.split("/").pop(),
             img: productImag,
@@ -87,13 +94,14 @@ export const postSelectUpSellProducts = async (req, res) => {
           arr.push(obj);
         }
 
-        console.log(result,"Result from ".yellow);
+        console.log(result, "Result from ".yellow);
       })
     );
- 
+
     const [row, created] = await db.UpsellProducts.findOrCreate({
       where: { storeId: session.id },
       defaults: {
+        storeCurrency: shopData[0].money_format.split(".").shift() || "$",
         upsellProducts,
         upsellProductsInfo: arr,
         storeId: session.id,
@@ -101,6 +109,7 @@ export const postSelectUpSellProducts = async (req, res) => {
     });
     if (!created) {
       row.upsellProducts = upsellProducts;
+      row.storeCurrency = shopData[0].money_format.split(".").shift() || "$";
       row.upsellProductsInfo = arr;
 
       await row.save();

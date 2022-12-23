@@ -44,24 +44,25 @@ Shopify.Context.initialize({
   // });
 
   // @ts-ignore
-  SESSION_STORAGE: new Shopify.Session.PostgreSQLSessionStorage(
-    // @ts-ignore
-    `${DATABASE.DIALECT}://${DATABASE.USERNAME}:${DATABASE.PASSWORD}@${DATABASE.HOST}/${DATABASE.DATABASE}?host=${DATABASE.INSTANCE_CONNECTION_NAME}`,
-    {
-      sessionTableName: "store",
-      port: 5432,
-    }
-  ),
-  // SESSION_STORAGE: Shopify.Session.PostgreSQLSessionStorage.withCredentials(
-  //   DATABASE.HOST,
-  //   DATABASE.DATABASE,
-  //   DATABASE.USERNAME,
-  //   DATABASE.PASSWORD,
+  // SESSION_STORAGE: new Shopify.Session.PostgreSQLSessionStorage(
+  //   // @ts-ignore
+  //   `${DATABASE.DIALECT}://${DATABASE.USERNAME}:${DATABASE.PASSWORD}@${DATABASE.HOST}/${DATABASE.DATABASE}?host=${DATABASE.INSTANCE_CONNECTION_NAME}`,
   //   {
   //     sessionTableName: "store",
-  //     port: 5432
+  //     port: 5432,
   //   }
   // ),
+
+  SESSION_STORAGE: Shopify.Session.PostgreSQLSessionStorage.withCredentials(
+    DATABASE.HOST,
+    DATABASE.DATABASE,
+    DATABASE.USERNAME,
+    DATABASE.PASSWORD,
+    {
+      sessionTableName: "store",
+      port: 5432
+    }
+  ),
 });
 
 // The transactions with Shopify will always be marked as test transactions, unless NODE_ENV is production.

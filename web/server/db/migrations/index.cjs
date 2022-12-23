@@ -16,24 +16,12 @@ module.exports = {
           autoIncrement: false,
           defaultValue: Sequelize.UUIDV4,
         },
-        storeId: {
-          type: Sequelize.STRING,
-          allowNull: false,
-          onDelete: "CASCADE",
-          references: {
-            model: "store",
-            key: "id",
-            as: "storeId",
-          },
-        },
+
         upsellProducts: {
           allowNull: false,
           type: Sequelize.TEXT,
         },
-        upsellProductsInfo: {
-          allowNull: false,
-          type: Sequelize.TEXT,
-        },
+
         totalOrders: {
           allowNull: false,
           type: Sequelize.INTEGER,
@@ -49,6 +37,24 @@ module.exports = {
         declineOffer: {
           allowNull: false,
           type: Sequelize.INTEGER,
+        },
+        storeCurrency: {
+          allowNull: false,
+          type: Sequelize.STRING,
+        },
+        upsellProductsInfo: {
+          allowNull: false,
+          type: Sequelize.TEXT,
+        },
+        storeId: {
+          type: Sequelize.STRING,
+          allowNull: false,
+          onDelete: "CASCADE",
+          references: {
+            model: "store",
+            key: "id",
+            as: "storeId",
+          },
         },
         createdAt: {
           allowNull: false,
